@@ -1,0 +1,30 @@
+input:focus,
+button:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+/* Smooth transition untuk semua elemen interaktif */
+input,
+button,
+a {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar untuk konsistensi */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e3a8a;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #172554;
+}
