@@ -1,0 +1,519 @@
+
+/* ============================================
+   CSS Variables - Government Colors
+   ============================================ */
+:root {
+    --gov-primary: #1e3a5f;
+    --gov-primary-dark: #152a45;
+    --gov-accent: #c9a227;
+}
+
+/* ============================================
+   Custom Color Classes
+   ============================================ */
+.bg-gov-primary {
+    background-color: var(--gov-primary);
+}
+
+.bg-gov-primary-dark {
+    background-color: var(--gov-primary-dark);
+}
+
+.text-gov-primary {
+    color: var(--gov-primary);
+}
+
+.text-gov-primary-dark {
+    color: var(--gov-primary-dark);
+}
+
+.hover\:bg-gov-primary-dark:hover {
+    background-color: var(--gov-primary-dark);
+}
+
+.hover\:text-gov-primary:hover {
+    color: var(--gov-primary);
+}
+
+.hover\:text-gov-primary-dark:hover {
+    color: var(--gov-primary-dark);
+}
+
+.focus\:border-gov-primary:focus {
+    border-color: var(--gov-primary);
+}
+
+.focus\:text-gov-primary:focus {
+    color: var(--gov-primary);
+}
+
+.focus\:ring-gov-primary:focus {
+    --tw-ring-color: var(--gov-primary);
+}
+
+/* ============================================
+   Input Focus Styles
+   ============================================ */
+.input-focus:focus {
+    outline: 2px solid #1e3a5f;
+    outline-offset: 2px;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Body adjustments */
+    .landscape-mobile\:p-3 {
+        padding: 0.75rem !important;
+    }
+    
+    .landscape-mobile\:pt-4 {
+        padding-top: 1rem !important;
+    }
+    
+    .landscape-mobile\:items-start {
+        align-items: flex-start !important;
+    }
+    
+    /* Card adjustments */
+    .landscape-mobile\:p-4 {
+        padding: 1rem !important;
+    }
+    
+    /* Logo adjustments */
+    .landscape-mobile\:mb-3 {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .landscape-mobile\:w-12 {
+        width: 3rem !important;
+    }
+    
+    .landscape-mobile\:h-12 {
+        height: 3rem !important;
+    }
+    
+    .landscape-mobile\:w-7 {
+        width: 1.75rem !important;
+    }
+    
+    .landscape-mobile\:h-7 {
+        height: 1.75rem !important;
+    }
+}
+
+@media (max-height: 400px) and (orientation: landscape) {
+    /* More aggressive adjustments for very short screens */
+    .landscape-mobile\:p-2 {
+        padding: 0.5rem !important;
+    }
+    
+    .landscape-mobile\:h-20 {
+        height: 5rem !important;
+    }
+    
+    .landscape-mobile\:h-16 {
+        height: 4rem !important;
+    }
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+::placeholder {
+    opacity: 1;
+}
+
+::selection {
+    background-color: #1e3a5f;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e3a5f;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #152a45;
+}
+
+/* ============================================
+   Dashboard Admin Styles
+   ============================================ */
+
+/* Dashboard Color Variables */
+:root {
+    --dashboard-primary: #1e40af;
+    --dashboard-primary-dark: #1e3a8a;
+    --dashboard-primary-light: #3b82f6;
+    --dashboard-accent: #0ea5e9;
+}
+
+/* Dashboard Color Classes */
+.bg-gov-primary {
+    background-color: var(--dashboard-primary);
+}
+
+.bg-gov-primary-dark {
+    background-color: var(--dashboard-primary-dark);
+}
+
+.bg-gov-primary-light {
+    background-color: var(--dashboard-primary-light);
+}
+
+.text-gov-primary {
+    color: var(--dashboard-primary);
+}
+
+.text-gov-primary-dark {
+    color: var(--dashboard-primary-dark);
+}
+
+.hover\:bg-gov-primary-dark:hover {
+    background-color: var(--dashboard-primary-dark);
+}
+
+.hover\:text-gov-primary:hover {
+    color: var(--dashboard-primary);
+}
+
+/* Body font */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar transition */
+.sidebar-transition {
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+/* Overlay */
+.sidebar-overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Dashboard Scrollbar styling */
+.dashboard-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.dashboard-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.dashboard-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.dashboard-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Active menu item */
+.menu-item.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #fff;
+}
+
+/* Submenu animation */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.submenu.open {
+    max-height: 200px;
+}
+
+.submenu.no-transition {
+    transition: none;
+}
+
+/* Generic no-transition utility */
+.no-transition {
+    transition: none !important;
+}
+
+/* Chart placeholder */
+.chart-placeholder {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+}
+
+/* Focus ring for dashboard */
+.focus\:ring-gov-primary\/20:focus {
+    --tw-ring-color: rgba(30, 64, 175, 0.2);
+}
+
+/* Modal Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Modal Hidden State */
+#detailModal.hidden,
+#editModal.hidden,
+#deleteModal.hidden {
+    pointer-events: none !important;
+}
+
+/* ============================================
+   Alokasi Aset Styles
+   ============================================ */
+
+/* Step Indicator */
+.step-item {
+    position: relative;
+}
+
+.step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #e2e8f0;
+    top: 20px;
+    left: 50%;
+    z-index: 0;
+}
+
+.step-item.completed:not(:last-child)::after {
+    background-color: #1e40af;
+}
+
+.step-circle {
+    position: relative;
+    z-index: 1;
+}
+
+/* Form transition */
+.form-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.form-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Card Border Styling
+   ============================================ */
+
+/* All cards with rounded-xl and shadow-sm get borders */
+.bg-white.rounded-xl.shadow-sm {
+    border: 1px solid #e5e7eb;
+}
+
+/* Cards with shadow-lg */
+.bg-white.rounded-lg.shadow-lg {
+    border: 1px solid #e5e7eb;
+}
+
+/* Generic shadow-sm cards */
+.shadow-sm {
+    border: 1px solid #e5e7eb;
+}
+
+/* Stat cards and other cards */
+.bg-gradient-to-br {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Cards in grids */
+.rounded-lg.border-l-4 {
+    border: 1px solid #e5e7eb;
+    border-left-width: 4px;
+}
+
+/* ============================================
+   Mobile Modal Animation Styles
+   ============================================ */
+@media (max-width: 768px) {
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 0.5;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    .modal-mobile-visible .modal-backdrop {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .modal-mobile-visible .modal-sheet {
+        animation: slideUp 0.4s ease-out forwards;
+    }
+
+    .modal-mobile-hiding .modal-backdrop {
+        animation: fadeOut 0.3s ease-in forwards;
+    }
+
+    .modal-mobile-hiding .modal-sheet {
+        animation: slideDown 0.4s ease-in forwards;
+    }
+
+    .modal-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 90vh;
+        border-radius: 24px 24px 0 0;
+        background-color: white;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .modal-sheet-content {
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+    }
+
+    .modal-sheet-handle {
+        width: 40px;
+        height: 4px;
+        background-color: #d1d5db;
+        border-radius: 2px;
+        margin: 12px auto 0;
+    }
+}
+
+/* ============================================
+   Bottom Sheet Animation
+   ============================================ */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Modal bottom sheet (mobile view) */
+.modal-sheet-mobile {
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-sheet-mobile.hide {
+    animation: slideDown 0.3s ease-out;
+}
+
+.modal-backdrop-mobile {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-backdrop-mobile.hide {
+    animation: fadeOut 0.3s ease-out;
+}
+
