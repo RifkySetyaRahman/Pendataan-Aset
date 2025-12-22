@@ -284,7 +284,7 @@ body.dark-mode .fixed.inset-0.bg-black\/50 {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-body.dark-mode .inline-flex.items-center.px-2.5.py-1.rounded-full {
+body.dark-mode .px-2\.5 {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
