@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aset Terpakai - SIP-ASET | Sistem Informasi Pendataan Aset Pemerintah</title>
+    <title>Aset Baru - SIP-ASET | Sistem Informasi Pendataan Aset Pemerintah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,65 +11,7 @@
 </head>
 <body class="bg-gray-100 font-inter flex flex-col min-h-screen">
     
-    <!-- Sidebar Overlay (Mobile) -->
-    <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
-    
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar-transition fixed top-0 left-0 z-50 h-full w-64 bg-gov-primary text-white -translate-x-full lg:translate-x-0">
-        <!-- Logo -->
-        <div class="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-building-columns text-gov-primary text-lg"></i>
-            </div>
-            <div class="sidebar-text">
-                <h1 class="font-bold text-sm leading-tight">SIP-ASET</h1>
-                <p class="text-xs text-white/70">Pendataan Aset</p>
-            </div>
-        </div>
-        
-        <!-- Navigation Menu -->
-        <nav class="px-3 py-4 space-y-1 overflow-y-auto h-[calc(100vh-180px)]">
-            <!-- Dashboard -->
-            <a href="dashboard-pegawai.html" class="menu-item flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors">
-                <i class="fas fa-chart-pie w-5 text-center"></i>
-                <span class="sidebar-text">Dashboard</span>
-            </a>
-            
-            <!-- Data Aset (with Submenu) -->
-            <div class="submenu-container">
-                <button onclick="toggleSubmenu(this)" class="menu-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-boxes-stacked w-5 text-center"></i>
-                        <span class="sidebar-text">Data Aset</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs sidebar-text transition-transform duration-300"></i>
-                </button>
-                <div class="submenu pl-8 space-y-1 mt-1">
-                    <a href="aset-baru.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
-                        <i class="fas fa-box w-4 text-center text-xs"></i>
-                        <span>Aset Baru</span>
-                    </a>
-                    <a href="aset-terpakai.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
-                        <i class="fas fa-box-open w-4 text-center text-xs"></i>
-                        <span>Aset Terpakai</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-        
-        <!-- User Profile (Bottom) -->
-        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-gov-primary-dark">
-            <div class="flex items-center gap-3">
-                <div class="sidebar-text flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate">Pegawai Dinas</p>
-                    <p class="text-xs text-white/60 truncate">pegawai@sipaset.go.id</p>
-                </div>
-                <button class="sidebar-text p-2 hover:bg-white/10 rounded-lg transition-colors" title="Logout">
-                    <i class="fas fa-right-from-bracket text-sm"></i>
-                </button>
-            </div>
-        </div>
-    </aside>
+    @include('components.sidebar-employee')
     
     <!-- Main Content Wrapper -->
     <div class="lg:ml-64 flex flex-col flex-1">
@@ -83,8 +25,8 @@
                         <i class="fas fa-bars text-lg"></i>
                     </button>
                     <div>
-                        <h1 class="text-lg font-semibold text-gray-800">Aset Terpakai</h1>
-                        <p class="text-xs text-gray-500 hidden sm:block">Daftar aset yang sedang digunakan</p>
+                        <h1 class="text-lg font-semibold text-gray-800">Aset Baru</h1>
+                        <p class="text-xs text-gray-500 hidden sm:block">Daftar Aset Terbaru</p>
                     </div>
                 </div>
                 
@@ -99,19 +41,19 @@
             
             <!-- Stats Cards -->
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
-                <!-- Total Aset Terpakai -->
+                <!-- Total Aset Baru -->
                 <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-base text-gray-500 mb-1">Total Aset Terpakai</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">126</h3>
+                            <p class="text-base text-gray-500 mb-1">Total Aset Baru</p>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">30</h3>
                             <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
                                 <i class="fas fa-arrow-up"></i>
-                                <span>8 ditambah bulan ini</span>
+                                <span>5 baru bulan ini</span>
                             </p>
                         </div>
-                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-box-open text-amber-600 text-xl"></i>
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-box text-blue-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -121,9 +63,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Kondisi Baik</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">110</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">28</h3>
                             <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <span>87%</span>
+                                <span>93%</span>
                             </p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -137,9 +79,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Rusak Ringan</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">12</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">2</h3>
                             <p class="text-xs text-yellow-600 mt-2 flex items-center gap-1">
-                                <span>10%</span>
+                                <span>7%</span>
                             </p>
                         </div>
                         <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
@@ -153,9 +95,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Rusak Berat</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">4</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">0</h3>
                             <p class="text-xs text-red-600 mt-2 flex items-center gap-1">
-                                <span>3%</span>
+                                <span>0%</span>
                             </p>
                         </div>
                         <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -195,72 +137,64 @@
                                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">No</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nama Aset</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Kategori</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Kondisi</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Lokasi</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tanggal Ditambah</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Row 1 -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">1</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Laptop ASUS VivoBook</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Komputer</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
+                                <td class="px-6 py-4 text-sm text-gray-800">1</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 font-medium">Monitor Samsung 27"</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Baru</span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Meja Kerja A1</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">10 Des 2025</td>
                             </tr>
                             
                             <!-- Row 2 -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">2</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Scanner Canon LiDE</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
+                                <td class="px-6 py-4 text-sm text-gray-800">2</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 font-medium">Keyboard Logitech MX</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Baru</span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Bersama</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">08 Des 2025</td>
                             </tr>
                             
                             <!-- Row 3 -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">3</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Proyektor Epson EB</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium inline-block">
-                                        <span class="hidden sm:inline">Rusak Ringan</span>
-                                        <span class="sm:hidden">R. Ringan</span>
-                                    </span>
+                                <td class="px-6 py-4 text-sm text-gray-800">3</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 font-medium">Mouse Wireless</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Baru</span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Rapat</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">05 Des 2025</td>
                             </tr>
                             
                             <!-- Row 4 -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">4</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Kursi Kantor Ergonomis</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Furniture</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium inline-block">
-                                        <span class="hidden sm:inline">Rusak Berat</span>
-                                        <span class="sm:hidden">R. Berat</span>
-                                    </span>
+                                <td class="px-6 py-4 text-sm text-gray-800">4</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 font-medium">Laptop Dell Inspiron</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Komputer</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Baru</span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Meja Kerja</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">02 Des 2025</td>
                             </tr>
                             
                             <!-- Row 5 -->
                             <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">5</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">AC Split LG 2 PK</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
+                                <td class="px-6 py-4 text-sm text-gray-800">5</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 font-medium">Printer Canon LBP312</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Baru</span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Kepala</td>
-                            </tr>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Kepala</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">28 Nov 2025</td>
                             </tr>
                         </tbody>
                     </table>
@@ -270,7 +204,7 @@
             <!-- Pagination -->
             <section class="flex items-center justify-between px-4 py-4 bg-white rounded-xl shadow-sm mb-6">
                 <div class="text-sm text-gray-600">
-                    Menampilkan <span class="font-semibold">1</span> hingga <span class="font-semibold">5</span> dari <span class="font-semibold">126</span> aset
+                    Menampilkan <span class="font-semibold">1</span> hingga <span class="font-semibold">5</span> dari <span class="font-semibold">30</span> aset
                 </div>
                 <div class="flex items-center gap-2">
                     <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
@@ -281,15 +215,15 @@
                         <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">2</button>
                         <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">3</button>
                         <span class="px-3 py-2 text-gray-600">...</span>
-                        <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">26</button>
+                        <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">6</button>
                     </div>
                     <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </section>
-            
-        </main>
+        
+            </main>
         
     </div>
     
