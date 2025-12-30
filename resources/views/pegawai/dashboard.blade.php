@@ -46,10 +46,25 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Total Aset</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">156</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">
+                            {{ $totalAset }}</h3>
                             <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>13 bulan ini</span>
+                                @if ($selisihAset > 0)
+    <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
+        <i class="fas fa-arrow-up"></i>
+        <span>{{ $selisihAset }} bulan ini</span>
+    </p>
+@elseif ($selisihAset < 0)
+    <p class="text-xs text-red-600 mt-2 flex items-center gap-1">
+        <i class="fas fa-arrow-down"></i>
+        <span>{{ abs($selisihAset) }} turun bulan ini</span>
+    </p>
+@else
+    <p class="text-xs text-gray-500 mt-2 flex items-center gap-1">
+        <i class="fas fa-minus"></i>
+        <span>Tidak ada perubahan</span>
+    </p>
+@endif
                             </p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -63,10 +78,8 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Kondisi Baik</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">148</h3>
-                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <span>95%</span>
-                            </p>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">{{ $baik }}</h3>
+                                <p class="text-xs text-green-600 mt-2">{{ $persenBaik }}%</p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -79,10 +92,8 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Rusak Ringan</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">8</h3>
-                            <p class="text-xs text-yellow-600 mt-2 flex items-center gap-1">
-                                <span>5%</span>
-                            </p>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">{{ $rusakRingan }}</h3>
+                            <p class="text-xs text-yellow-600 mt-2">{{ $persenRusakRingan }}%</p>
                         </div>
                         <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-exclamation-circle text-yellow-600 text-xl"></i>
@@ -95,10 +106,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-base text-gray-500 mb-1">Rusak Berat</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">0</h3>
-                            <p class="text-xs text-red-600 mt-2 flex items-center gap-1">
-                                <span>0%</span>
-                            </p>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">{{ $rusakBerat }}</h3>
+                            <p class="text-xs text-red-600 mt-2">
+                            {{ $persenRusakBerat }}%</p>
                         </div>
                         <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-times-circle text-red-600 text-xl"></i>
@@ -121,21 +131,35 @@
                         <!-- Donut Chart -->
                         <div class="flex-shrink-0">
                             <div class="relative w-56 h-56">
+                                @php
+                                $circumference = 2 * pi() * 45;
+                                $baikDash = ($persenBaik / 100) * $circumference;
+                                $rrDash = ($persenRusakRingan / 100) * $circumference;
+                                $rbDash = ($persenRusakBerat / 100) * $circumference;
+                                @endphp
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
                                     <!-- Background circle -->
                                     <circle cx="60" cy="60" r="45" fill="none" stroke="#e5e7eb" stroke-width="14"/>
                                     <!-- Baik (94%) - Green -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#10b981" stroke-width="14" 
-                                        stroke-dasharray="265.49 282.73" stroke-dashoffset="0" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#10b981" stroke-width="14"
+                                    stroke-dasharray="{{ $baikDash }} {{ $circumference }}"
+                                    stroke-dashoffset="0"/>
                                     <!-- Rusak Ringan (5%) - Yellow -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#f59e0b" stroke-width="14" 
-                                        stroke-dasharray="14.14 282.73" stroke-dashoffset="-265.49" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#f59e0b" stroke-width="14"
+                                    stroke-dasharray="{{ $rrDash }} {{ $circumference }}"
+                                    stroke-dashoffset="-{{ $baikDash }}"/>
                                     <!-- Rusak Berat (1%) - Red -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#ef4444" stroke-width="14" 
-                                        stroke-dasharray="2.83 282.73" stroke-dashoffset="-279.63" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#ef4444" stroke-width="14"
+                                    stroke-dasharray="{{ $rbDash }} {{ $circumference }}"
+                                    stroke-dashoffset="-{{ $baikDash + $rrDash }}"/>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span class="text-4xl font-bold text-gray-800">94%</span>
+                                    <span class="text-4xl font-bold text-gray-800">
+                                    {{ $persenBaik }}%
+                                    </span>
                                     <span class="text-sm text-gray-500 mt-1">Kondisi Baik</span>
                                 </div>
                             </div>
@@ -145,39 +169,57 @@
                         <div class="space-y-4 flex-1 min-w-[280px]">
                             <!-- Baik -->
                             <div class="flex items-start gap-4 p-4 bg-green-50 rounded-lg border border-green-200 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-center flex-shrink-0">
-                                    <span class="w-4 h-4 rounded-full bg-green-500"></span>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800">Baik</p>
-                                    <p class="text-xs text-gray-600 mt-0.5">Kondisi optimal, layak pakai</p>
-                                    <p class="text-lg font-bold text-green-600 mt-2">148 aset <span class="text-sm text-gray-500 font-normal">(94%)</span></p>
-                                </div>
-                            </div>
+    <div class="flex items-center justify-center flex-shrink-0">
+        <span class="w-4 h-4 rounded-full bg-green-500"></span>
+    </div>
+    <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-800">Baik</p>
+        <p class="text-xs text-gray-600 mt-0.5">Kondisi optimal, layak pakai</p>
+        <p class="text-lg font-bold text-green-600 mt-2">
+            {{ $baik }} aset
+            <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenBaik }}%)
+            </span>
+        </p>
+    </div>
+</div>
+
                             
                             <!-- Rusak Ringan -->
                             <div class="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-center flex-shrink-0">
-                                    <span class="w-4 h-4 rounded-full bg-yellow-500"></span>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800">Rusak Ringan</p>
-                                    <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan minor</p>
-                                    <p class="text-lg font-bold text-yellow-600 mt-2">8 aset <span class="text-sm text-gray-500 font-normal">(5%)</span></p>
-                                </div>
-                            </div>
+    <div class="flex items-center justify-center flex-shrink-0">
+        <span class="w-4 h-4 rounded-full bg-yellow-500"></span>
+    </div>
+    <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-800">Rusak Ringan</p>
+        <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan minor</p>
+        <p class="text-lg font-bold text-yellow-600 mt-2">
+            {{ $rusakRingan }} aset
+            <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenRusakRingan }}%)
+            </span>
+        </p>
+    </div>
+</div>
+
                             
                             <!-- Rusak Berat -->
                             <div class="flex items-start gap-4 p-4 bg-red-50 rounded-lg border border-red-200 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center justify-center flex-shrink-0">
-                                    <span class="w-4 h-4 rounded-full bg-red-500"></span>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-800">Rusak Berat</p>
-                                    <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan besar</p>
-                                    <p class="text-lg font-bold text-red-600 mt-2">0 aset <span class="text-sm text-gray-500 font-normal">(1%)</span></p>
-                                </div>
-                            </div>
+    <div class="flex items-center justify-center flex-shrink-0">
+        <span class="w-4 h-4 rounded-full bg-red-500"></span>
+    </div>
+    <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-800">Rusak Berat</p>
+        <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan besar</p>
+        <p class="text-lg font-bold text-red-600 mt-2">
+            {{ $rusakBerat }} aset
+            <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenRusakBerat }}%)
+            </span>
+        </p>
+    </div>
+</div>
+
                         </div>
                     </div>
                 </div>
@@ -186,40 +228,35 @@
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <h3 class="font-semibold text-gray-800 mb-4">Aset Terbaru</h3>
                     <div class="space-y-3">
-                        <div class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
-                            <p class="font-medium text-sm text-gray-800">Monitor Samsung 27"</p>
-                            <p class="text-xs text-gray-500 mt-1">10 Des 2025 • Perangkat Kantor</p>
-                        </div>
-                        <div class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
-                            <p class="font-medium text-sm text-gray-800">Keyboard Logitech MX</p>
-                            <p class="text-xs text-gray-500 mt-1">08 Des 2025 • Perangkat Kantor</p>
-                        </div>
-                        <div class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
-                            <p class="font-medium text-sm text-gray-800">Mouse Wireless</p>
-                            <p class="text-xs text-gray-500 mt-1">05 Des 2025 • Perangkat Kantor</p>
-                        </div>
-                        <div class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 transition-colors">
-                            <p class="font-medium text-sm text-gray-800">Laptop Dell Inspiron</p>
-                            <p class="text-xs text-gray-500 mt-1">02 Des 2025 • Komputer</p>
-                        </div>
-                    </div>
+    @forelse ($asetTerbaru as $aset)
+        <div class="p-3 border border-gray-200 rounded-lg hover:border-blue-500">
+            <p class="font-medium text-sm text-gray-800">
+                {{ $aset->name }}
+            </p>
+            <p class="text-xs text-gray-500 mt-1">
+                {{ \Carbon\Carbon::parse($aset->purchase_date)->translatedFormat('d M Y') }}
+            </p>
+        </div>
+    @empty
+        <p class="text-sm text-gray-500">Belum ada data aset</p>
+    @endforelse
+</div>
                     <!-- Pagination for Recent Assets -->
                     <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                         <div class="text-xs text-gray-600">
-                            Menampilkan <span class="font-semibold">1</span> hingga <span class="font-semibold">4</span> dari <span class="font-semibold">50</span> aset terbaru
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button class="px-2 py-1 border border-gray-200 rounded text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs" disabled>
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-medium">1</button>
-                            <button class="px-2 py-1 border border-gray-200 rounded text-gray-600 hover:bg-gray-50 transition-colors text-xs">2</button>
-                            <button class="px-2 py-1 border border-gray-200 rounded text-gray-600 hover:bg-gray-50 transition-colors text-xs">...</button>
-                            <button class="px-2 py-1 border border-gray-200 rounded text-gray-600 hover:bg-gray-50 transition-colors text-xs">13</button>
-                            <button class="px-2 py-1 border border-gray-200 rounded text-gray-600 hover:bg-gray-50 transition-colors text-xs">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
+    Menampilkan
+    <span class="font-semibold">{{ $asetTerbaru->firstItem() }}</span>
+    hingga
+    <span class="font-semibold">{{ $asetTerbaru->lastItem() }}</span>
+    dari
+    <span class="font-semibold">{{ $asetTerbaru->total() }}</span>
+    aset terbaru
+</div>
+
+                       <div class="flex items-center gap-1">
+    {{ $asetTerbaru->links('pagination::tailwind') }}
+</div>
+
                     </div>
                 </div>
             </section>

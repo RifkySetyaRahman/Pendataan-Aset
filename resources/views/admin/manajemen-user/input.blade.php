@@ -28,23 +28,7 @@
             pointer-events: auto !important;
         }
     </style>
-    <script>
-        // Apply dark mode immediately before page renders
-        (function() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                // Schedule to add class to body as soon as it's available
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.body.classList.add('dark-mode');
-                    });
-                } else {
-                    document.body.classList.add('dark-mode');
-                }
-            }
-        })();
-    </script>
+
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -140,6 +124,14 @@
                         <p class="text-sm font-semibold text-gray-800" id="confirmRole">-</p>
                     </div>
                 </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-briefcase text-blue-600 mt-1 w-4"></i>
+                    <div class="flex-1">
+                        <p class="text-xs text-gray-500 font-medium">Status</p>
+                        <p class="text-sm font-semibold text-gray-800" id="confirmRole">-</p>
+                    </div>
+                </div>
             </div>
             
             <div class="flex gap-3">
@@ -175,21 +167,43 @@
             <!-- Form Card -->
             <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 lg:p-10">
                 <h2 class="text-2xl font-bold text-gray-800 mb-8">Informasi Pengguna</h2>
-                <form id="addUserForm" onsubmit="submitForm(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form action="{{ route('users.store') }}" method="POST"class="grid grid-cols-1 md:grid-cols-2 gap-6"> @csrf
                     <!-- Nama Lengkap -->
                     <div class="md:col-span-2">
                         <label for="namaLengkap" class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-user text-gray-400 mr-2"></i>Nama Lengkap
                             <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="namaLengkap" 
-                            name="nama_lengkap" 
-                            placeholder="Masukkan nama lengkap" 
-                            minlength="3"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                        >
+                        <input
+    type="text"
+    name="name"
+    value="{{ old('name') }}"
+    class="w-full px-4 py-2.5 border rounded-lg
+           @error('name') border-red-500 @else border-gray-300 @enderror">
+
+@error('name')
+    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+@enderror
+
+                    </div>
+
+                    <!-- Username -->
+                    <div class="md:col-span-2">
+                        <label for="namaLengkap" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user text-gray-400 mr-2"></i>Username
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input
+    type="text"
+    name="username"
+    value="{{ old('username') }}"
+    class="w-full px-4 py-2.5 border rounded-lg
+           @error('username') border-red-500 @enderror">
+
+@error('username')
+    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+@enderror
+
                     </div>
 
                     <!-- Email -->
@@ -198,13 +212,17 @@
                             <i class="fas fa-envelope text-gray-400 mr-2"></i>Email
                             <span class="text-red-500">*</span>
                         </label>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
-                            placeholder="Masukkan email" 
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                        >
+                        <input
+    type="email"
+    name="email"
+    value="{{ old('email') }}"
+    class="w-full px-4 py-2.5 border rounded-lg
+           @error('email') border-red-500 @enderror">
+
+@error('email')
+    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+@enderror
+
                     </div>
 
                     <!-- Role -->
@@ -213,15 +231,26 @@
                             <i class="fas fa-briefcase text-gray-400 mr-2"></i>Role
                             <span class="text-red-500">*</span>
                         </label>
-                        <select 
-                            id="role" 
-                            name="role" 
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                        >
-                            <option value="">-- Pilih Role --</option>
-                            <option value="Administrator">Administrator</option>
-                            <option value="Operator">Operator</option>
-                            <option value="Supervisor">Supervisor</option>
+                            <select name="role" class="w-full px-4 py-2.5 border rounded-lg
+    @error('role') border-red-500 @enderror">
+    <option value="">-- Pilih Role --</option>
+    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+    <option value="pegawai" {{ old('role') == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+</select>
+
+@error('role')
+    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+@enderror
+
+                    </div>
+                    
+                    <!-- Status -->
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-briefcase text-gray-400 mr-2"></i>Status
+                        <select name="status" required class="w-full px-4 py-2.5 border rounded-lg">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Nonaktif</option>
                         </select>
                     </div>
 
@@ -232,14 +261,14 @@
                             <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                placeholder="Masukkan password" 
-                                minlength="6"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-10"
-                            >
+                            <input
+    type="password"
+    name="password"
+    class="w-full px-4 py-2.5 border rounded-lg
+           @error('password') border-red-500 @enderror">
+
+
+
                             <button 
                                 type="button" 
                                 onclick="togglePasswordVisibility('password')"
@@ -247,6 +276,9 @@
                             >
                                 <i class="fas fa-eye"></i>
                             </button>
+                            @error('password')
+    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+@enderror
                         </div>
                     </div>
 
@@ -257,15 +289,13 @@
                             <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input 
-                                type="password" 
-                                id="konfirmPassword" 
-                                name="konfirm_password" 
-                                placeholder="Konfirmasi password" 
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-10"
-                            >
-                            <button 
-                                type="button" 
+                            <input
+    type="password"
+    name="password_confirmation"
+    class="w-full px-4 py-2.5 border rounded-lg">
+
+                            <button
+                                type="submit"
                                 onclick="togglePasswordVisibility('konfirmPassword')"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                             >
@@ -290,6 +320,13 @@
                             <i class="fas fa-save"></i> Tambah Pengguna
                         </button>
                     </div>
+                    @if (session('success'))
+    <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-700">
+        <i class="fas fa-check-circle mr-1"></i>
+        {{ session('success') }}
+    </div>
+@endif
+
                 </form>
             </div>
         </main>

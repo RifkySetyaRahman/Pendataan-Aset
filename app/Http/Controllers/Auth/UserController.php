@@ -14,41 +14,58 @@ class UserController extends Controller
      * Halaman index (list user + modal edit & delete)
      */
     public function index()
-    {
-        $users = User::latest()->get();
-        return view('manajemen-user.index', compact('users'));
-    }
+{
+    $users = User::latest()->paginate(10); // 10 data per halaman
+    return view('admin.manajemen-user.index', compact('users'));
+}
+
 
     /**
      * Halaman input user baru
      */
     public function create()
     {
-        return view('manajemen-user.input');
+        return view('admin.manajemen-user.input');
     }
 
     /**
      * Simpan user baru (dari halaman input)
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:100|unique:users,username',
-            'email'    => 'required|email|unique:users,email',
-            'role'     => 'required|in:admin,pegawai',
-            'status'   => 'required|in:aktif,nonaktif',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    $validated = $request->validate([
+        'name'     => 'required|string|min:3',
+        'username' => 'required|string|min:3|unique:users,username',
+        'email'    => 'required|email|unique:users,email',
+        'role'     => 'required|in:admin,pegawai',
+        'status'   => 'required|in:aktif,nonaktif',
+        'password' => [
+    'required',
+    'string',
+    'min:8',
+    'confirmed',
+    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+    ], [
+        'required' => ':attribute wajib diisi',
+        'email'    => 'Format email tidak valid',
+        'min'      => ':attribute minimal :min karakter',
+        'unique'   => ':attribute sudah digunakan',
+        'confirmed'=> 'Konfirmasi password tidak cocok',
+    ]]);
 
-        $validated['password'] = Hash::make($validated['password']);
+    User::create([
+        'name'     => $validated['name'],
+        'username' => $validated['username'],
+        'email'    => $validated['email'],
+        'role'     => $validated['role'],
+        'status'   => $validated['status'],
+        'password' => Hash::make($validated['password']),
+    ]);
 
-        User::create($validated);
-
-        // Redirect ke halaman index
-        return redirect()->route('users.index')
-            ->with('success', 'User berhasil ditambahkan');
-    }
+    return redirect()
+        ->route('users.create')
+        ->with('success', 'Pengguna berhasil ditambahkan');
+}
 
     /**
      * Update user (modal edit di index)
@@ -56,12 +73,16 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:100|unique:users,username,' . $user->id,
-            'email'    => 'required|email|unique:users,email,' . $user->id,
             'role'     => 'required|in:admin,pegawai',
             'status'   => 'required|in:aktif,nonaktif',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => [
+    'required',
+    'string',
+    'min:8',
+    'confirmed',
+    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+],
+
         ]);
 
         if ($request->filled('password')) {

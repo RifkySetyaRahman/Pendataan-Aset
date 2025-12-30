@@ -7,24 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-admin.css">
-    <script>
-        // Apply dark mode immediately before page renders
-        (function() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                // Schedule to add class to body as soon as it's available
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.body.classList.add('dark-mode');
-                    });
-                } else {
-                    document.body.classList.add('dark-mode');
-                }
-            }
-        })();
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -63,11 +46,25 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Total Aset</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">2,847</h3>
-                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>12% dari bulan lalu</span>
-                            </p>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">
+    {{ number_format($totalAset) }}
+</h3>
+
+<p class="text-sm mt-1
+    @if($trenAset == 'naik') text-green-600
+    @elseif($trenAset == 'turun') text-red-600
+    @else text-gray-500
+    @endif
+">
+    @if($trenAset == 'naik')
+        ▲ {{ $selisihAset }} aset naik dibanding bulan lalu
+    @elseif($trenAset == 'turun')
+        ▼ {{ abs($selisihAset) }} aset turun dibanding bulan lalu
+    @else
+        ● Tidak ada perubahan dari bulan lalu
+    @endif
+</p>
+
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-boxes-stacked text-gov-primary text-xl"></i>
@@ -82,7 +79,10 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Aset Rusak/Perbaikan</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-red-600">127</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-red-600">
+    {{ number_format($asetRusak) }}
+</h3>
+
                             <p class="text-xs text-red-600 mt-2 flex items-center gap-1">
                                 <i class="fas fa-exclamation-triangle"></i>
                                 <span>Perlu tindakan</span>
@@ -99,11 +99,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Aset Digunakan</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-green-600">2,593</h3>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-green-600">
+    {{ number_format($asetDigunakan) }}
+</h3>
                             <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <i class="fas fa-check-circle"></i>
-                                <span>91% dari total aset</span>
-                            </p>
+    <i class="fas fa-check-circle"></i>
+    <span>{{ $persenDigunakan }}% dari total aset</span></p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                             <i class="fas fa-clipboard-check text-green-600 text-xl"></i>
@@ -130,14 +131,20 @@
                                     <!-- Background circle -->
                                     <circle cx="60" cy="60" r="45" fill="none" stroke="#e5e7eb" stroke-width="14"/>
                                     <!-- Baik (75%) - Blue -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#2563eb" stroke-width="14" 
-                                        stroke-dasharray="212.05 282.73" stroke-dashoffset="0" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#10b981" stroke-width="14"
+                                    stroke-dasharray="{{ $baikDash }} {{ $circumference }}"
+                                    stroke-dashoffset="0"/>
                                     <!-- Rusak Ringan (15%) - Amber -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#f59e0b" stroke-width="14" 
-                                        stroke-dasharray="42.41 282.73" stroke-dashoffset="-212.05" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#f59e0b" stroke-width="14"
+                                    stroke-dasharray="{{ $rrDash }} {{ $circumference }}"
+                                    stroke-dashoffset="-{{ $baikDash }}"/>
                                     <!-- Rusak Berat (10%) - Red -->
-                                    <circle cx="60" cy="60" r="45" fill="none" stroke="#ef4444" stroke-width="14" 
-                                        stroke-dasharray="28.27 282.73" stroke-dashoffset="-254.46" stroke-linecap="round"/>
+                                    <circle cx="60" cy="60" r="45"
+                                    fill="none" stroke="#ef4444" stroke-width="14"
+                                    stroke-dasharray="{{ $rbDash }} {{ $circumference }}"
+                                    stroke-dashoffset="-{{ $baikDash + $rrDash }}"/>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-transparent to-transparent">
                                     <span class="text-4xl font-bold text-gray-800">75%</span>
@@ -345,33 +352,6 @@
             });
         });
         
-        // Auto-sync dark mode from localStorage (set from Pengaturan page)
-        function syncDarkMode() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                document.body.classList.add('dark-mode');
-            } else {
-                document.documentElement.classList.remove('dark-mode');
-                document.body.classList.remove('dark-mode');
-            }
-        }
-        
-        // Apply dark mode immediately
-        syncDarkMode();
-        
-        // Also sync on DOMContentLoaded
-        window.addEventListener('DOMContentLoaded', function() {
-            syncDarkMode();
-        });
-        
-        // Listen for storage changes (when settings are changed in another tab/window)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'darkMode') {
-                syncDarkMode();
-            }
-        });
     </script>
     
 </body>

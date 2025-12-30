@@ -32,11 +32,11 @@
                 <i class="fas fa-chevron-down text-xs sidebar-text transition-transform duration-300"></i>
             </button>
             <div class="submenu pl-8 space-y-1 mt-1">
-                <a href="aset-baru.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
+                <a href="new.blade.php" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
                     <i class="fas fa-box w-4 text-center text-xs"></i>
                     <span>Aset Terbaru</span>
                 </a>
-                <a href="aset-terpakai.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
+                <a href="used.blade.php" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
                     <i class="fas fa-box-open w-4 text-center text-xs"></i>
                     <span>Aset Terpakai</span>
                 </a>
@@ -45,15 +45,27 @@
     </nav>
     
     <!-- User Profile (Bottom) -->
-    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-gov-primary-dark">
+    {{-- <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-gov-primary-dark">
         <div class="flex items-center gap-3">
-            <div class="sidebar-text flex-1 min-w-0">
-                <p class="text-sm font-medium truncate">Pegawai Dinas</p>
-                <p class="text-xs text-white/60 truncate">pegawai@sipaset.go.id</p>
-            </div>
-            <button class="sidebar-text p-2 hover:bg-white/10 rounded-lg transition-colors" title="Logout">
-                <i class="fas fa-right-from-bracket text-sm"></i>
-            </button>
-        </div>
+    <div class="sidebar-text flex-1 min-w-0">
+        <p class="text-sm font-medium truncate">
+            {{ auth()->user()->name }}
+        </p>
+        <p class="text-xs text-white/60 truncate">
+            {{ auth()->user()->email }}
+        </p>
+    </div>
+
+    <!-- Logout -->
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit"
+            class="sidebar-text p-2 hover:bg-white/10 rounded-lg transition-colors"
+            title="Logout">
+            <i class="fas fa-right-from-bracket text-sm"></i>
+        </button>
+    </form>
+</div> --}}
+
     </div>
 </aside>

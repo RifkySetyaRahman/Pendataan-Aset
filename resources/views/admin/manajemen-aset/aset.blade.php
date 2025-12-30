@@ -8,23 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style-admin.css">
-    <script>
-        // Apply dark mode immediately before page renders
-        (function() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                // Schedule to add class to body as soon as it's available
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.body.classList.add('dark-mode');
-                    });
-                } else {
-                    document.body.classList.add('dark-mode');
-                }
-            }
-        })();
-    </script>
+
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -58,382 +42,181 @@
             
             <!-- Stats Cards -->
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-6">
-                <!-- Total Aset Baru -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Total Aset Baru</p>
-                            <h3 class="text-xl lg:text-2xl font-bold text-gray-800">156</h3>
-                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>12 baru bulan ini</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-box text-blue-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Kondisi Baik -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow border-l-4 border-green-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Kondisi Baik</p>
-                            <h3 class="text-xl lg:text-2xl font-bold text-green-600">142</h3>
-                            <p class="text-xs text-gray-600 mt-2 flex items-center gap-1">
-                                <span>91%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+    <!-- Total Aset Baru -->
+    <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 mb-1">Total Aset Baru</p>
+                <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
+                    {{ $totalAsetBaru }}
+                </h3>
 
-                <!-- Kondisi Cukup -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow border-l-4 border-yellow-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Kondisi Cukup</p>
-                            <h3 class="text-xl lg:text-2xl font-bold text-yellow-600">10</h3>
-                            <p class="text-xs text-gray-600 mt-2 flex items-center gap-1">
-                                <span>6%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-exclamation-circle text-yellow-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+                @if ($asetBaruBulanIni > 0)
+                    <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>{{ $asetBaruBulanIni }} baru bulan ini</span>
+                    </p>
+                @else
+                    <p class="text-xs text-gray-400 mt-2">
+                        Tidak ada penambahan bulan ini
+                    </p>
+                @endif
+            </div>
 
-                <!-- Kondisi Rusak -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow border-l-4 border-red-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Kondisi Rusak</p>
-                            <h3 class="text-xl lg:text-2xl font-bold text-red-600">4</h3>
-                            <p class="text-xs text-gray-600 mt-2 flex items-center gap-1">
-                                <span>3%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-times-circle text-red-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-box text-blue-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kondisi Baik -->
+    <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 mb-1">Kondisi Baik</p>
+                <h3 class="text-xl lg:text-2xl font-bold text-green-600">
+                    {{ $baik }}
+                </h3>
+                <p class="text-xs text-gray-600 mt-2">
+                    {{ $persenBaik }}%
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kondisi Cukup -->
+    <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-yellow-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 mb-1">Kondisi Cukup</p>
+                <h3 class="text-xl lg:text-2xl font-bold text-yellow-600">
+                    {{ $cukup }}
+                </h3>
+                <p class="text-xs text-gray-600 mt-2">
+                    {{ $persenCukup }}%
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-exclamation-circle text-yellow-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kondisi Rusak -->
+    <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-red-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 mb-1">Kondisi Rusak</p>
+                <h3 class="text-xl lg:text-2xl font-bold text-red-600">
+                    {{ $rusak }}
+                </h3>
+                <p class="text-xs text-gray-600 mt-2">
+                    {{ $persenRusak }}%
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-times-circle text-red-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+</section>
+
             
             <!-- Filter & Actions Bar -->
-            <section class="bg-white rounded-xl shadow-sm p-4 mb-6">
-                <div class="flex flex-col sm:flex-row items-end gap-3 justify-between">
-                    <!-- Filter by Kategori Utama -->
-                    <div class="w-full sm:w-auto">
-                        <select id="mainCategoryFilter" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" onchange="filterAssets()">
-                            <option value="">Semua</option>
-                            <option value="infrastruktur-pasif">Infrastruktur Pasif</option>
-                            <option value="perangkat-aktif">Perangkat Aktif</option>
-                            <option value="power">Power</option>
-                            <option value="tools">Tools</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Right Side: Search + Button -->
-                    <div class="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
-                        <!-- Search Bar -->
-                        <div class="relative w-full sm:w-48">
-                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                            <input type="text" id="searchInput" placeholder="Cari aset..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" onkeyup="filterAssets()">
-                        </div>
-                        
-                        <!-- Tombol Tambah Aset -->
-                        <div class="w-full sm:w-auto">
-                            <a href="form-tambah-aset.html" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gov-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-plus"></i>
-                                <span>Tambah</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+<section class="bg-white rounded-xl shadow-sm p-4 mb-6">
+    <div class="flex flex-col sm:flex-row items-end gap-3 justify-between">
+
+        <!-- Filter Kategori -->
+        <div class="w-full sm:w-auto">
+            <select id="mainCategoryFilter"
+                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600
+                       focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                onchange="filterAssets()">
+                <option value="">Semua</option>
+                <option value="infrastruktur-pasif">Infrastruktur Pasif</option>
+                <option value="perangkat-aktif">Perangkat Aktif</option>
+                <option value="power">Power</option>
+                <option value="tools">Tools</option>
+            </select>
+        </div>
+
+        <!-- Search & Button -->
+        <div class="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
+
+            <!-- Search -->
+            <div class="relative w-full sm:w-48">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Cari aset..."
+                    class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm
+                           focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    onkeyup="filterAssets()">
+            </div>
+
+            <!-- Tambah Aset -->
+            <a href="{{ route('admin.aset.create') }}"
+               class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2
+                      bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                <i class="fas fa-plus"></i>
+                Tambah
+            </a>
+        </div>
+    </div>
+</section>
+
             
             <!-- Grid View (Hidden by default) -->
-            <section id="gridView" class="hidden mb-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    
-                    <!-- Asset Card 1 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center relative">
-                            <i class="fas fa-router text-5xl text-blue-400"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">Router Cisco ASR 1000</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <button onclick="openAllocationModalDirect(1)" class="flex-1 flex items-center justify-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" title="Alokasikan Aset">
-                                    <i class="fas fa-share-from-square text-lg"></i>
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 15 Des 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(1)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Router Cisco ASR 1000')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 2 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center relative">
-                            <i class="fas fa-sitemap text-5xl text-purple-400"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">Switch Cisco Catalyst 9300</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 28 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(2)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Switch Cisco Catalyst 9300')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 3 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center relative">
-                            <i class="fas fa-wifi text-5xl text-amber-400"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">Access Point Ubiquiti 6E</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 25 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(3)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Access Point Ubiquiti 6E')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 4 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center relative">
-                            <i class="fas fa-database text-5xl text-teal-400"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">NAS Storage 24Bay Dell</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 20 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(4)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('NAS Storage 24Bay Dell')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 5 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-rose-50 to-rose-100 flex items-center justify-center relative">
-                            <i class="fas fa-ethernet text-5xl text-rose-400"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1\">Kabel Fiber Optik 1KM</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 18 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(5)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Kabel Fiber Optik 1KM')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 6 -->
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                        <div class="h-32 bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center relative">
-                            <i class=\"fas fa-battery-full text-5xl text-indigo-400\"></i>
-                            <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                Baru
-                            </span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">UPS 10KVA Online</h4>
-                            <p class="text-sm text-gray-500 mb-2">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 15 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(6)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Backup Power UPS 10kVA')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 7 -->
-                    <div class=\"bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group\">
-                        <div class=\"h-32 bg-gradient-to-br from-cyan-50 to-cyan-100 flex items-center justify-center relative\">
-                            <i class=\"fas fa-layer-group text-5xl text-cyan-400\"></i>
-                            <span class=\"absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full\">
-                                Baru
-                            </span>
-                        </div>
-                        <div class=\"p-4\">
-                            <h4 class=\"font-semibold text-gray-800 mb-1 line-clamp-1\">Patch Panel 48 Port</h4>
-                            <p class=\"text-sm text-gray-500 mb-2\">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 10 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(7)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Rack Server 42U')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Asset Card 8 -->
-                    <div class=\"bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group\">
-                        <div class=\"h-32 bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center relative\">
-                            <i class=\"fas fa-shield text-5xl text-orange-400\"></i>
-                            <span class=\"absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full\">
-                                Baru
-                            </span>
-                        </div>
-                        <div class=\"p-4\">
-                            <h4 class=\"font-semibold text-gray-800 mb-1 line-clamp-1\">Firewall Palo Alto PA-5220</h4>
-                            <p class=\"text-sm text-gray-500 mb-2\">Jaringan</p>
-                            <div class="flex items-center gap-2 mb-3">
-                                <a href="alokasi-aset.html" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                    Alokasikan
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span><i class="fas fa-calendar-alt mr-1"></i> 05 Nov 2025</span>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openDetailModal(8)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="openEditModal()" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('Firewall Palo Alto PA-5220')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+            <!-- Grid Aset Baru dari Database -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+    @forelse ($asetBaru as $aset)
+        <div class="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
+
+            <!-- Header Card -->
+            <div class="h-32 bg-blue-50 flex items-center justify-center relative">
+                <i class="fas fa-box text-5xl text-blue-400"></i>
+
+                <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                    {{ ucfirst($aset->status) }}
+                </span>
+            </div>
+
+            <!-- Body Card -->
+            <div class="p-4">
+                <h4 class="font-semibold text-gray-800 line-clamp-1">
+                    {{ $aset->name }}
+                </h4>
+
+                <p class="text-sm text-gray-500">
+                    {{ $aset->category_code }} • {{ $aset->location }}
+                </p>
+
+                <p class="text-xs text-gray-400">
+                    SN: {{ $aset->serialnumber }}
+                </p>
+
+                <div class="flex justify-between items-center mt-3 text-xs text-gray-400">
+                    <span>
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        {{ \Carbon\Carbon::parse($aset->purchase_date)->format('d M Y') }}
+                    </span>
+                    <span>Qty: {{ $aset->quantity }}</span>
                 </div>
-            </section>
+            </div>
+
+        </div>
+    @empty
+        <p class="col-span-full text-center text-gray-500">
+            Tidak ada aset baru
+        </p>
+    @endforelse
+
+</section>
+
             
             <!-- Table View -->
             <section id="tableView" class="mb-6">
@@ -451,168 +234,171 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600">1</td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-medium text-gray-800">Router Cisco ASR 1000</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jaringan</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">15 Des 2025</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Baru</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="openAllocationModalDirect(1)" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                                <i class="fas fa-share-from-square"></i>
-                                            </button>
-                                            <button onclick="openDetailModal(1)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="openEditModal()" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="confirmDelete('Router Cisco ASR 1000')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600">2</td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-medium text-gray-800">Switch Cisco Catalyst 9300</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jaringan</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">12 Des 2025</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Baru</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="openAllocationModalDirect(2)" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                                <i class="fas fa-share-from-square"></i>
-                                            </button>
-                                            <button onclick="openDetailModal(2)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="openEditModal()" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="confirmDelete('Switch Cisco Catalyst 9300')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600">3</td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-medium text-gray-800">Access Point Ubiquiti 6E</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jaringan</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">10 Des 2025</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Baru</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="openAllocationModalDirect(3)" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                                <i class="fas fa-share-from-square"></i>
-                                            </button>
-                                            <button onclick="openDetailModal(3)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="openEditModal()" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="confirmDelete('Access Point Ubiquiti 6E')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600">4</td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-medium text-gray-800">NAS Storage 24Bay Dell</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jaringan</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">08 Des 2025</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Baru</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="openAllocationModalDirect(4)" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                                <i class="fas fa-share-from-square"></i>
-                                            </button>
-                                            <button onclick="openDetailModal(4)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="openEditModal()" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="confirmDelete('NAS Storage 24Bay Dell')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-sm text-gray-600">5</td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-medium text-gray-800">Kabel Fiber Optik 1KM</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jaringan</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">05 Des 2025</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Baru</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button onclick="openAllocationModalDirect(5)" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                                <i class="fas fa-share-from-square"></i>
-                                            </button>
-                                            <button onclick="openDetailModal(5)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="openEditModal()" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="confirmDelete('Kabel Fiber Optik 1KM')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+    @forelse ($asetBaru as $index => $aset)
+        <tr class="hover:bg-gray-50 transition-colors">
+
+            <!-- No -->
+            <td class="px-6 py-4 text-center text-sm text-gray-600">
+                {{ $index + 1 }}
+            </td>
+
+            <!-- Nama Aset -->
+            <td class="px-6 py-4">
+                <span class="font-medium text-gray-800">
+                    {{ $aset->name }}
+                </span>
+                <div class="text-xs text-gray-400">
+                    SN: {{ $aset->serialnumber }}
+                </div>
+            </td>
+
+            <!-- Kategori -->
+            <td class="px-6 py-4 text-sm text-gray-600">
+                {{ $aset->category_code }}
+            </td>
+
+            <!-- Tanggal Perolehan -->
+            <td class="px-6 py-4 text-sm text-gray-600">
+                {{ \Carbon\Carbon::parse($aset->purchase_date)->format('d M Y') }}
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+                <span class="px-2.5 py-1 
+                    @if($aset->status === 'baru') bg-green-100 text-green-700
+                    @elseif($aset->status === 'terpakai') bg-blue-100 text-blue-700
+                    @else bg-gray-100 text-gray-700
+                    @endif
+                    text-xs font-medium rounded-full">
+                    {{ ucfirst($aset->status) }}
+                </span>
+            </td>
+
+            <!-- Aksi -->
+            <td class="px-6 py-4">
+                <div class="flex items-center justify-center gap-2">
+
+                    <!-- Alokasikan -->
+                    <a href="{{ route('admin.aset.alokasi', $aset->id) }}"
+                       class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-share-from-square"></i>
+                    </a>
+
+                    <!-- Detail -->
+                    <a href="{{ route('admin.aset.show', $aset->id) }}"
+                       class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    <!-- Edit -->
+                    <a href="{{ route('admin.aset.edit', $aset->id) }}"
+                       class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <!-- Hapus -->
+                    <form action="{{ route('admin.aset.destroy', $aset->id) }}"
+                          method="POST"
+                          onsubmit="return confirm('Yakin hapus aset {{ $aset->name }}?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+
+                </div>
+            </td>
+
+        </tr>
+    @empty
+        <tr>
+            <td colspan="6" class="text-center py-6 text-gray-500">
+                Tidak ada aset baru
+            </td>
+        </tr>
+    @endforelse
+</tbody>
+
                         </table>
                     </div>
                 </div>
             </section>
             
             <!-- Pagination -->
-            <section class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-sm text-gray-500">
-                        Menampilkan <span class="font-medium text-gray-700">1-8</span> dari <span class="font-medium text-gray-700">156</span> aset
-                    </p>
-                    <div class="flex items-center gap-1">
-                        <button class="px-3 py-1.5 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="px-3 py-1.5 text-sm bg-gov-primary text-white rounded-lg">1</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">2</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">3</button>
-                        <span class="px-2 text-gray-400">...</span>
-                        <button class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">20</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </section>
+            <!-- Pagination -->
+<section class="bg-white rounded-xl shadow-sm p-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+
+        <!-- Info -->
+        <p class="text-sm text-gray-500">
+            Menampilkan
+            <span class="font-medium text-gray-700">
+                {{ $asetBaru->firstItem() }}
+            </span>
+            -
+            <span class="font-medium text-gray-700">
+                {{ $asetBaru->lastItem() }}
+            </span>
+            dari
+            <span class="font-medium text-gray-700">
+                {{ $asetBaru->total() }}
+            </span>
+            aset
+        </p>
+
+        <!-- Navigasi -->
+        <div class="flex items-center gap-1">
+
+            {{-- Previous --}}
+            @if ($asetBaru->onFirstPage())
+                <span class="px-3 py-1.5 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+            @else
+                <a href="{{ $asetBaru->previousPageUrl() }}"
+                   class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            @endif
+
+            {{-- Page Numbers --}}
+            @foreach ($asetBaru->getUrlRange(1, $asetBaru->lastPage()) as $page => $url)
+                @if ($page == $asetBaru->currentPage())
+                    <span class="px-3 py-1.5 text-sm bg-gov-primary text-white rounded-lg">
+                        {{ $page }}
+                    </span>
+                @elseif (
+                    $page == 1 ||
+                    $page == $asetBaru->lastPage() ||
+                    abs($page - $asetBaru->currentPage()) <= 1
+                )
+                    <a href="{{ $url }}"
+                       class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                        {{ $page }}
+                    </a>
+                @elseif ($page == 2 || $page == $asetBaru->lastPage() - 1)
+                    <span class="px-2 text-gray-400">...</span>
+                @endif
+            @endforeach
+
+            {{-- Next --}}
+            @if ($asetBaru->hasMorePages())
+                <a href="{{ $asetBaru->nextPageUrl() }}"
+                   class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            @else
+                <span class="px-3 py-1.5 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+            @endif
+
+        </div>
+    </div>
+</section>
+
             
         </main>
         
@@ -1689,35 +1475,6 @@
                 closeDetailModal();
                 closeEditModal();
             }
-        });
-        
-        // Auto-sync dark mode from localStorage (set from Pengaturan page)
-        function syncDarkMode() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                document.body.classList.add('dark-mode');
-            } else {
-                document.documentElement.classList.remove('dark-mode');
-                document.body.classList.remove('dark-mode');
-            }
-        }
-        
-        // Apply dark mode immediately
-        syncDarkMode();
-        
-        // Also sync on DOMContentLoaded
-        window.addEventListener('DOMContentLoaded', function() {
-            syncDarkMode();
-        });
-        
-        // Listen for storage changes (when settings are changed in another tab/window)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'darkMode') {
-                syncDarkMode();
-            }
-        });
     </script>
     
 </body>

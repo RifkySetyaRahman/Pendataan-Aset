@@ -21,7 +21,8 @@ return new class extends Migration
     $table->string('condition_code');
 
     $table->string('description')->nullable();
-    $table->enum('status', ['baru', 'terpakai'])->default('baru');
+    $table->enum('status', ['baru', 'bekas', 'terpakai'])->default('baru');
+    $table->integer('quantity')->default(1);
     $table->timestamps();
 
     $table->foreign('category_code')

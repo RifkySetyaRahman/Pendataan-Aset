@@ -66,8 +66,36 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200" id="categoryTableBody">
-                            <!-- Data akan di-load dari array -->
-                        </tbody>
+    @forelse($categories as $index => $category)
+    <tr class="hover:bg-gray-50 transition-colors">
+        <td class="px-6 py-4 text-sm text-gray-800">{{ $index + 1 }}</td>
+        <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $category->name }}</td>
+        <td class="px-6 py-4 text-sm">
+            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">{{ $category->code }}</span>
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-600">{{ $category->description ?? '-' }}</td>
+        <td class="px-6 py-4 text-sm text-center">
+            <div class="flex items-center justify-center gap-2">
+                <button onclick="editCategory({{ $category->id }}, '{{ $category->name }}', '{{ $category->code }}', '{{ $category->description }}')" 
+                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <form action="{{ route('kategori-aset.destroy', $category->id) }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada kategori aset</td>
+    </tr>
+    @endforelse
+</tbody>
                     </table>
                 </div>
                 
@@ -103,7 +131,9 @@
                 </div>
 
                 <!-- Form -->
-                <form id="categoryForm" onsubmit="handleCategorySubmit(event)" class="p-6 space-y-4">
+                <form id="categoryForm" action="{{ route('kategori-aset.store') }}" method="POST" class="p-6 space-y-4">
+                    @csrf
+                        <input type="hidden" name="id" id="categoryId">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                         <input type="text" id="categoryName" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Contoh: Komputer, Kendaraan" required>
@@ -146,7 +176,9 @@
             </div>
 
             <!-- Form -->
-            <form id="categoryFormMobile" onsubmit="handleCategorySubmit(event)" class="p-6 space-y-4 pb-8">
+            <form id="categoryFormMobile" action="{{ route('kategori-aset.store') }}" method="POST" class="p-6 space-y-4 pb-8">
+                @csrf
+                    <input type="hidden" name="id" id="categoryIdMobile">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                     <input type="text" id="categoryNameMobile" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Contoh: Komputer, Kendaraan" required>
@@ -214,15 +246,6 @@
     </div>
 
     <script>
-        // Data kategori aset
-        let categories = [
-            { id: 1, name: 'Komputer', code: 'KP', description: 'Perangkat komputer dan hardware' },
-            { id: 2, name: 'Kendaraan', code: 'KD', description: 'Kendaraan operasional dan dinas' },
-            { id: 3, name: 'Perabotan', code: 'PR', description: 'Furnitur dan perabotan kantor' },
-            { id: 4, name: 'Elektronik', code: 'EL', description: 'Perangkat elektronik lainnya' },
-            { id: 5, name: 'Jaringan', code: 'JR', description: 'Perangkat jaringan dan telekomunikasi' }
-        ];
-
         let editingId = null;
         let pendingDeleteId = null;
 
@@ -320,18 +343,33 @@
 
             editingId = id;
             const title = 'Edit Kategori Aset';
-            
+
             // Update desktop
             document.getElementById('modalTitle').textContent = title;
+            document.getElementById('categoryId').value = category.id;
             document.getElementById('categoryName').value = category.name;
             document.getElementById('categoryCode').value = category.code;
             document.getElementById('categoryDescription').value = category.description || '';
-            
+
             // Update mobile
             document.getElementById('mobileTitleCategory').textContent = title;
+            document.getElementById('categoryIdMobile').value = category.id;
             document.getElementById('categoryNameMobile').value = category.name;
             document.getElementById('categoryCodeMobile').value = category.code;
             document.getElementById('categoryDescriptionMobile').value = category.description || '';
+    
+            // Tampilkan modal
+            const modal = document.getElementById('categoryModal');
+            modal.classList.remove('hidden');
+
+    if (window.innerWidth < 1024) {
+        document.getElementById('mobileBackdrop').classList.remove('hidden');
+        document.getElementById('mobileModal').classList.remove('hidden');
+    } else {
+        document.getElementById('desktopModal').parentElement.classList.remove('hidden');
+    }
+}
+
             
             // Show modal container
             document.getElementById('categoryModal').classList.remove('hidden');
@@ -623,6 +661,26 @@
         // Initial render
         filteredCategories = [...categories];
         renderCategoryTableWithPagination();
+
+        function editCategory(id, name, code, description) {
+            editingId = id;
+
+            // Update modal
+            document.getElementById('modalTitle').textContent = 'Edit Kategori Aset';
+            document.getElementById('categoryName').value = name;
+            document.getElementById('categoryCode').value = code;
+            document.getElementById('categoryDescription').value = description;
+
+            // Show modal
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+
+        function openAddCategoryModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Tambah Kategori Aset';
+            document.getElementById('categoryForm').reset();
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ class AsetController extends Controller
      */
     public function used()
     {
-        $asets = Aset::where('status', 'dipakai')
+        $asets = Aset::where('status', 'terpakai')
             ->latest()
             ->get();
 

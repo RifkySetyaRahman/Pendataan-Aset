@@ -64,9 +64,33 @@
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200" id="conditionTableBody">
-                            <!-- Data akan di-load dari array -->
-                        </tbody>
+                       <tbody class="divide-y divide-gray-200">
+                            @forelse($conditions as $index => $condition)
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4 text-sm text-gray-800">{{ $index + 1 }}</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $condition->name }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $condition->description ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-sm text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                    <button data-id="{{ $condition->id }}" data-name="{{ $condition->name }}" data-description="{{ $condition->description }}"
+                                    onclick="openEditModal(this)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                    </button>
+                        <form action="{{ route('admin.kondisi-aset.destroy', $condition->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+    </td>
+@empty
+<tr>
+    <td colspan="4" class="text-center text-gray-500 py-4">Belum ada data kondisi aset</td>
+</tr>
+@endforelse
+</tbody>
                     </table>
                 </div>
                 
@@ -102,25 +126,20 @@
                 </div>
 
                 <!-- Form -->
-                <form id="conditionForm" onsubmit="handleConditionSubmit(event)" class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kondisi</label>
-                        <input type="text" id="conditionName" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Contoh: Baik, Rusak Ringan" required>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="conditionDescription" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Jelaskan kondisi ini (opsional)"></textarea>
-                    </div>
-
-                    <!-- Actions -->
+                <form id="conditionForm" action="{{ route('admin.kondisi-aset.store') }}" method="POST" class="p-6 space-y-4">
+                    @csrf
+                <input type="hidden" name="id" id="conditionId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kondisi</label>
+                    <input type="text" name="name" id="conditionName" class="w-full ..." required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea name="description" id="conditionDescription" rows="3" class="w-full ..."></textarea>
+                </div>
                     <div class="flex gap-3 pt-4 border-t border-gray-200">
-                        <button type="button" onclick="closeConditionModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                            Simpan
-                        </button>
+                        <button type="button" onclick="closeConditionModal()" class="flex-1 px-4 py-2.5 ...">Batal</button>
+                        <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white ...">Simpan</button>
                     </div>
                 </form>
             </div>
@@ -299,17 +318,21 @@
             }
         }
 
-        function editCondition(id) {
-            const condition = conditions.find(c => c.id === id);
-            if (!condition) return;
+        function openEditModal(button) {
+            const id = button.dataset.id;
+            const name = button.dataset.name;
+            const description = button.dataset.description;
 
             editingId = id;
             const title = 'Edit Kondisi Aset';
             
             // Update desktop
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('conditionName').value = condition.name;
-            document.getElementById('conditionDescription').value = condition.description || '';
+            document.getElementById('modalTitle').textContent = 'Edit Kondisi Aset';
+            document.getElementById('conditionId').value = id;
+            document.getElementById('conditionName').value = name;
+            document.getElementById('conditionDescription').value = description || '';
+
+            document.getElementById('conditionModal').classList.remove('hidden');
             
             // Update mobile
             document.getElementById('mobileTitleCondition').textContent = title;

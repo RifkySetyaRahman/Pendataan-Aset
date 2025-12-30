@@ -101,13 +101,6 @@
                             </svg>
                         </button>
                     </div>
-                    
-                    <!-- Lupa Kata Sandi -->
-                    <div class="flex justify-end mt-2">
-                        <a href="#" class="text-sm text-gov-blue-700 hover:text-gov-blue-900 hover:underline focus:outline-none focus:underline">
-                            Lupa Kata Sandi?
-                        </a>
-                    </div>
                 </div>
                 
                 <!-- Captcha Checkbox -->

@@ -42,9 +42,9 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800">Daftar Pengguna</h2>
-                    <p class="text-gray-600 mt-1">Total 3 pengguna aktif</p>
+                    <p class="text-gray-600 mt-1">Total {{ $users->count() }} pengguna</p>
                 </div>
-                <a href="form-tambah-pengguna.html" class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 text-sm whitespace-nowrap w-fit">
+                <a href="{{ route('users.create') }}" class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 text-sm whitespace-nowrap w-fit">
                     <i class="fas fa-plus"></i>
                     <span>Tambah Pengguna</span>
                 </a>
@@ -81,113 +81,145 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            <!-- User 1 -->
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <p class="font-medium text-gray-800">Admin Dinas</p>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">admin@sipaset.go.id</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
-                                        Administrator
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                        Aktif
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">01 Jan 2024</td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-1">
-                                        <button onclick="openEditUserModal('Admin Dinas', 'admin@sipaset.go.id', 'Administrator')" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="openDeleteConfirmModal('Admin Dinas')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- User 2 -->
-                            <tr class="hover:bg-gray-50 transition-colors bg-gray-50/50">
-                                <td class="px-6 py-4">
-                                    <p class="font-medium text-gray-800">Budi Santoso</p>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">budi@sipaset.go.id</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                                        Operator
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                        Aktif
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">15 Feb 2024</td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-1">
-                                        <button onclick="openEditUserModal('Budi Santoso', 'budi@sipaset.go.id', 'Operator')" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="openDeleteConfirmModal('Budi Santoso')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- User 3 -->
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <p class="font-medium text-gray-800">Siti Nurhaliza</p>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">siti@sipaset.go.id</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                        Supervisor
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></span>
-                                        Nonaktif
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">20 Mar 2024</td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-1">
-                                        <button onclick="openEditUserModal('Siti Nurhaliza', 'siti@sipaset.go.id', 'Supervisor')" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="openDeleteConfirmModal('Siti Nurhaliza')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+@forelse ($users as $user)
+    <tr class="hover:bg-gray-50 transition-colors">
+        <!-- Nama -->
+        <td class="px-6 py-4">
+            <p class="font-medium text-gray-800">
+                {{ $user->name }}
+            </p>
+        </td>
+
+        <!-- Email -->
+        <td class="px-6 py-4 text-sm text-gray-600">
+            {{ $user->email }}
+        </td>
+
+        <!-- Role -->
+        <td class="px-6 py-4">
+            @if ($user->role === 'admin')
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                    Administrator
+                </span>
+            @else
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                    Pegawai
+                </span>
+            @endif
+        </td>
+
+        <!-- Status -->
+        <td class="px-6 py-4">
+            @if ($user->status === 'aktif')
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                    Aktif
+                </span>
+            @else
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></span>
+                    Nonaktif
+                </span>
+            @endif
+        </td>
+
+        <!-- Bergabung -->
+        <td class="px-6 py-4 text-sm text-gray-600">
+            {{ $user->created_at->format('d M Y') }}
+        </td>
+
+        <!-- Aksi -->
+        <td class="px-6 py-4 text-center">
+            <div class="flex items-center justify-center gap-1">
+
+                <!-- Edit -->
+                <button
+                    onclick="openEditUserModal(
+                        '{{ $user->id }}',
+                        '{{ $user->name }}',
+                        '{{ $user->username }}',
+                        '{{ $user->email }}',
+                        '{{ $user->role }}',
+                        '{{ $user->status }}'
+                    )"
+                    class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                    title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+
+                <!-- Delete -->
+                <form action="{{ route('users.destroy', $user->id) }}"
+                      method="POST"
+                      onsubmit="return confirm('Yakin hapus user ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button
+                        type="submit"
+                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Hapus">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+
+            </div>
+        </td>
+    </tr>
+@empty
+    <tr>
+        <td colspan="6" class="px-6 py-6 text-center text-gray-500">
+            Data pengguna belum tersedia
+        </td>
+    </tr>
+@endforelse
+</tbody>
+
                     </table>
                 </div>
             </div>
             
             <!-- Pagination -->
-            <div class="mt-6 flex items-center justify-between">
-                <p class="text-sm text-gray-600">Menampilkan 1-3 dari 3 pengguna</p>
-                <div class="flex items-center gap-2">
-                    <button class="px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50" disabled>
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="px-3 py-2 text-sm bg-gov-primary text-white rounded-lg">1</button>
-                    <button class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
+            <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+    <!-- Info -->
+    <p class="text-sm text-gray-600">
+        Menampilkan 
+        {{ $users->firstItem() ?? 0 }} - {{ $users->lastItem() ?? 0 }} 
+        dari {{ $users->total() }} pengguna
+    </p>
+
+    <!-- Pagination -->
+    <div class="flex items-center gap-1">
+        {{-- Previous --}}
+        <a href="{{ $users->previousPageUrl() }}"
+           class="px-3 py-2 text-sm border rounded-lg transition
+           {{ $users->onFirstPage()
+                ? 'text-gray-400 border-gray-200 cursor-not-allowed'
+                : 'text-gray-700 border-gray-300 hover:bg-gray-100' }}">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+        {{-- Page Numbers --}}
+        @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+            <a href="{{ $url }}"
+               class="px-3 py-2 text-sm rounded-lg transition
+               {{ $users->currentPage() == $page
+                    ? 'bg-gov-primary text-white'
+                    : 'text-gray-700 border border-gray-300 hover:bg-gray-100' }}">
+                {{ $page }}
+            </a>
+        @endforeach
+
+        {{-- Next --}}
+        <a href="{{ $users->nextPageUrl() }}"
+           class="px-3 py-2 text-sm border rounded-lg transition
+           {{ $users->hasMorePages()
+                ? 'text-gray-700 border-gray-300 hover:bg-gray-100'
+                : 'text-gray-400 border-gray-200 cursor-not-allowed' }}">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+</div>
+
             </div>
         </main>
         
@@ -614,6 +646,7 @@
                         <label for="editNama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
                         <input type="text" id="editNama" name="nama" placeholder="Masukkan nama lengkap" required class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary">
                     </div>
+                    
                     
                     <!-- Email -->
                     <div class="mb-4">

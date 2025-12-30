@@ -41,100 +41,110 @@
         </header>
         
         <!-- Content -->
-        <main class="p-4 lg:p-6">
-            <div class="bg-white rounded-xl shadow-sm p-6 lg:p-8">
-                <form id="allocationForm" onsubmit="handleFormSubmit(event)">
-                    <!-- Pilih Aset -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Pilih Aset <span class="text-red-500">*</span>
-                        </label>
-                        <select id="assetSelect" onchange="updateAssetDetails()" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                            <option value="">-- Pilih Aset --</option>
-                            <option value="1">Router Cisco ASR 1000</option>
-                            <option value="2">Switch Cisco Catalyst 9300</option>
-                            <option value="3">Access Point Ubiquiti 6E</option>
-                            <option value="4">NAS Storage 24Bay Dell</option>
-                            <option value="5">Kabel Fiber Optik 1KM</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Detail Aset -->
-                    <div id="assetDetailsSection" class="mb-8 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-300">
-                        <div class="flex items-center gap-3 mb-4">
-                            <i class="fas fa-box-open text-2xl text-blue-600"></i>
-                            <h3 class="text-base font-semibold text-gray-800">Detail Aset</h3>
-                        </div>
-                        
-                        <!-- Row 1: Nama Aset -->
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-tag text-blue-600 mr-2"></i>Nama Aset
-                            </label>
-                            <div id="detailNama" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">Pilih aset terlebih dahulu</div>
-                        </div>
-                        
-                        <!-- Row 2: Kode SN & Lokasi -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-barcode text-blue-600 mr-2"></i>Kode SN
-                                </label>
-                                <div id="detailSN" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">-</div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-map-location-dot text-blue-600 mr-2"></i>Lokasi
-                                </label>
-                                <div id="detailAlamat" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">-</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Row 3: Kategori & Kondisi -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-folder-open text-blue-600 mr-2"></i>Kategori
-                                </label>
-                                <div id="detailKategori" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">-</div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-heart-pulse text-blue-600 mr-2"></i>Kondisi
-                                </label>
-                                <div id="detailKondisi" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">-</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tanggal Alokasi -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Tanggal Alokasi <span class="text-red-500">*</span>
-                        </label>
-                        <input type="date" id="allocationDate" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                    </div>
-                    
-                    <!-- Catatan -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan (Opsional)</label>
-                        <textarea id="notes" rows="4" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Masukkan catatan atau keterangan tambahan..."></textarea>
-                    </div>
-                    
-                    <!-- Form Actions -->
-                    <div class="flex flex-col sm:flex-row items-center gap-3 pt-6 border-t border-gray-200">
-                        <a href="aset-baru.html" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-times"></i>
-                            Batal
-                        </a>
-                        <button type="submit" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gov-primary text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-check"></i>
-                            Alokasikan Aset
-                        </button>
-                    </div>
-                </form>
+        <!-- Content -->
+<main class="p-4 lg:p-6">
+    <div class="bg-white rounded-xl shadow-sm p-6 lg:p-8">
+        <form id="allocationForm" 
+              action="{{ route('admin.manajemen-aset.update', $aset->id) }}" 
+              method="POST">
+            
+            @csrf
+            @method('PUT') <!-- Spoofing PUT untuk update -->
+
+            <!-- Pilih Aset -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Pilih Aset <span class="text-red-500">*</span>
+                </label>
+                <select id="assetSelect" name="id" onchange="updateAssetDetails()" 
+                        class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                    <option value="">-- Pilih Aset --</option>
+                    @foreach($asetList as $item)
+                        <option 
+                            value="{{ $item->id }}"
+                            data-nama="{{ $item->name }}"
+                            data-sn="{{ $item->serialnumber }}"
+                            data-alamat="{{ $item->location }}"
+                            data-kategori="{{ $item->kategori->name ?? '-' }}"
+                            data-kondisi="{{ $item->kondisi->name ?? '-' }}"
+                            {{ $aset->id == $item->id ? 'selected' : '' }}
+                        >
+                            {{ $item->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-        </main>
+
+            <!-- Detail Aset -->
+            <div id="assetDetailsSection" class="mb-8 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-box-open text-2xl text-blue-600"></i>
+                    <h3 class="text-base font-semibold text-gray-800">Detail Aset</h3>
+                </div>
+                
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-tag text-blue-600 mr-2"></i>Nama Aset
+                    </label>
+                    <div id="detailNama" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">
+                        {{ $aset->name }}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-barcode text-blue-600 mr-2"></i>Kode SN
+                        </label>
+                        <div id="detailSN" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">
+                            {{ $aset->serialnumber }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-map-location-dot text-blue-600 mr-2"></i>Lokasi
+                        </label>
+                        <div id="detailAlamat" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">
+                            {{ $aset->location }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-folder-open text-blue-600 mr-2"></i>Kategori
+                        </label>
+                        <div id="detailKategori" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">
+                            {{ $aset->kategori->name ?? '-' }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-heart-pulse text-blue-600 mr-2"></i>Kondisi
+                        </label>
+                        <div id="detailKondisi" class="w-full px-4 py-3 border border-blue-300 rounded-lg text-sm bg-white text-gray-600 font-medium shadow-sm">
+                            {{ $aset->kondisi->name ?? '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 pt-6 border-t border-gray-200">
+                <a href="{{ route('admin.manajemen-aset.index') }}" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-times"></i>
+                    Batal
+                </a>
+                <button type="submit" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gov-primary text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-check"></i>
+                    Update Aset
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
     </div>
     
     <!-- Modal Success -->
@@ -194,24 +204,25 @@
         }
         
         function updateAssetDetails() {
-            const assetSelect = document.getElementById('assetSelect').value;
-            const detailsSection = document.getElementById('assetDetailsSection');
-            
-            if (!assetSelect) {
-                detailsSection.classList.add('hidden');
-                return;
-            }
-            
-            const asset = assetData[assetSelect];
-            if (asset) {
-                document.getElementById('detailNama').textContent = asset.nama;
-                document.getElementById('detailSN').textContent = asset.sn;
-                document.getElementById('detailAlamat').textContent = asset.alamat;
-                document.getElementById('detailKategori').textContent = asset.kategori;
-                document.getElementById('detailKondisi').textContent = asset.kondisi;
-                detailsSection.classList.remove('hidden');
-            }
-        }
+    const select = document.getElementById('assetSelect');
+    const selected = select.options[select.selectedIndex];
+
+    const detailsSection = document.getElementById('assetDetailsSection');
+
+    if (!selected.value) {
+        detailsSection.classList.add('hidden');
+        return;
+    }
+
+    document.getElementById('detailNama').textContent = selected.dataset.nama;
+    document.getElementById('detailSN').textContent = selected.dataset.sn;
+    document.getElementById('detailAlamat').textContent = selected.dataset.alamat;
+    document.getElementById('detailKategori').textContent = selected.dataset.kategori;
+    document.getElementById('detailKondisi').textContent = selected.dataset.kondisi;
+
+    detailsSection.classList.remove('hidden');
+}
+
         
         function handleFormSubmit(event) {
             event.preventDefault();

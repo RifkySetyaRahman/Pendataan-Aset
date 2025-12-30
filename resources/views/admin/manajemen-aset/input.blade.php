@@ -18,23 +18,6 @@
             padding-right: 2.5rem;
         }
     </style>
-    <script>
-        // Apply dark mode immediately before page renders
-        (function() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                // Schedule to add class to body as soon as it's available
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.body.classList.add('dark-mode');
-                    });
-                } else {
-                    document.body.classList.add('dark-mode');
-                }
-            }
-        })();
-    </script>
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -103,8 +86,13 @@
                 </div>
                 
                 <!-- Form -->
-                <form id="assetForm" class="bg-white rounded-lg shadow-sm p-6" onkeypress="return handleFormKeypress(event)">
-                    
+                <form 
+    method="POST" 
+    action="{{ route('admin.aset.store') }}" 
+    class="bg-white rounded-lg shadow-sm p-6"
+>
+    @csrf
+
                     <!-- Step 1 -->
                     <div id="step1" class="step-content">
                         <h2 class="text-xl font-semibold text-gray-800 mb-6">Identitas Aset</h2>
@@ -112,76 +100,134 @@
                         <!-- Nama Aset -->
                         <div class="mb-5">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nama Aset <span class="text-red-500">*</span></label>
-                            <input type="text" id="namaAset" name="namaAset" required placeholder="Contoh: Laptop ASUS VivoBook 14" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <input
+    type="text"
+    name="name"
+    required
+    class="w-full px-4 py-2.5 border rounded-lg"
+    placeholder="Contoh: Laptop ASUS VivoBook 14"
+>
                             <p class="text-xs text-gray-400 mt-1">Masukkan nama lengkap aset beserta merk jika ada</p>
                         </div>
                         
                         <!-- Kode SN (Serial Number) -->
                         <div class="mb-5">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kode SN / Serial Number <span class="text-red-500">*</span></label>
-                            <input type="text" id="kodeSN" name="kodeSN" required placeholder="Contoh: SN123456789" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <input
+    type="text"
+    name="serialnumber"
+    required
+    class="w-full px-4 py-2.5 border rounded-lg"
+    placeholder="SN123456789"
+>
+
                             <p class="text-xs text-gray-400 mt-1">Masukkan nomor seri atau kode identitas aset</p>
                         </div>
                         
                         <!-- Alamat/Lokasi -->
                         <div class="mb-5">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Alamat / Lokasi Penempatan <span class="text-red-500">*</span></label>
-                            <input type="text" id="alamat" name="alamat" required placeholder="Contoh: Ruang Kepala Dinas, Lt. 2" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <input
+    type="text"
+    name="location"
+    required
+    class="w-full px-4 py-2.5 border rounded-lg"
+    placeholder="Ruang Kepala Dinas, Lt. 2"
+>
+
                             <p class="text-xs text-gray-400 mt-1">Masukkan alamat atau lokasi penempatan aset</p>
                         </div>
                         
+                        <!-- Tanggal Perolehan -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Perolehan</label>
+                            <input
+    type="date"
+    name="purchase_date"
+    class="w-full px-4 py-2.5 border rounded-lg"
+>
+
+                            <p class="text-xs text-gray-400 mt-1">Tanggal aset diterima atau dibeli</p>
+                        </div>
+
                         <!-- Kategori -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kategori <span class="text-red-500">*</span></label>
-                            <select id="kategori" name="kategori" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white">
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Keamanan">Keamanan</option>
-                                <option value="Server">Server</option>
-                                <option value="Penyimpanan">Penyimpanan Data</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Pasif">Pasif (Furnitur)</option>
-                            </select>
+                            <select name="category_code" required class="w-full px-4 py-2.5 border rounded-lg bg-white">
+    <option value="">-- Pilih Kategori --</option>
+    @foreach ($categories as $category)
+        <option 
+            value="{{ $category->code }}"
+            @selected(old('category_code') == $category->code)
+        >
+            {{ $category->name }}
+        </option>
+    @endforeach
+</select>
+
                             <p class="text-xs text-gray-400 mt-1">Pilih kategori aset sesuai dengan jenisnya</p>
                         </div>
                         
                         <!-- Kondisi -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kondisi <span class="text-red-500">*</span></label>
-                            <select id="kondisi" name="kondisi" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white">
-                                <option value="">-- Pilih Kondisi --</option>
-                                <option value="Baik">Baik</option>
-                                <option value="Rusak Ringan">Rusak Ringan</option>
-                                <option value="Rusak Berat">Rusak Berat</option>
-                            </select>
+                            <select name="condition_code" required class="w-full px-4 py-2.5 border rounded-lg bg-white">
+    <option value="">-- Pilih Kondisi --</option>
+    @foreach ($conditions as $condition)
+        <option 
+            value="{{ $condition->code }}"
+            @selected(old('condition_code') == $condition->code)
+        >
+            {{ $condition->name }}
+        </option>
+    @endforeach
+</select>
+
                             <p class="text-xs text-gray-400 mt-1">Pilih kondisi aset saat ini</p>
                         </div>
                     </div>
                     
-                    <!-- Step 2 -->
-                    <div id="step2" class="step-content hidden">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Informasi Tambahan</h2>
-                        
-                        <!-- Tanggal Perolehan -->
-                        <div class="mb-5">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Perolehan</label>
-                            <input type="date" id="tanggalPerolehan" name="tanggalPerolehan" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                            <p class="text-xs text-gray-400 mt-1">Tanggal aset diterima atau dibeli</p>
+                    <!-- Deskripsi -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                            <textarea
+    name="description"
+    rows="4"
+    class="w-full px-4 py-2.5 border rounded-lg resize-none"
+>{{ old('description') }}</textarea>
+
+                            <p class="text-xs text-gray-400 mt-1">Deskripsi Barang</p>
                         </div>
+                    </div>
                         
+                        <!-- Status -->
+                        <div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+        Status Aset <span class="text-red-500">*</span>
+    </label>
+    <select
+        name="status"
+        required
+        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg
+               focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white"
+    >
+        <option value="baru" selected>Baru</option>
+        <option value="bekas">Bekas</option>
+    </select>
+    <p class="text-xs text-gray-400 mt-1">
+        Pilih status fisik aset saat didaftarkan
+    </p>
+</div>
+
                         <!-- Jumlah -->
                         <div class="mb-5">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah</label>
-                            <input type="number" id="jumlah" name="jumlah" value="1" min="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <input type="number" name="quantity"
+    min="1"
+    value="1"
+    required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                         </div>
                         
-                        <!-- Keterangan -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Keterangan / Catatan Tambahan</label>
-                            <textarea id="keterangan" name="keterangan" rows="4" placeholder="Catatan tambahan tentang aset..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"></textarea>
-                            <p class="text-xs text-gray-400 mt-1">Opsional - Catatan atau informasi tambahan</p>
-                        </div>
-                    </div>
                     
                     <!-- Buttons -->
                     <div class="flex gap-3 justify-end mt-8 pt-6 border-t border-gray-200">
@@ -349,33 +395,6 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('tanggalPerolehan').value = today;
         
-        // Auto-sync dark mode from localStorage (set from Pengaturan page)
-        function syncDarkMode() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            
-            if (darkModePreference === 'enabled') {
-                document.documentElement.classList.add('dark-mode');
-                document.body.classList.add('dark-mode');
-            } else {
-                document.documentElement.classList.remove('dark-mode');
-                document.body.classList.remove('dark-mode');
-            }
-        }
-        
-        // Apply dark mode immediately
-        syncDarkMode();
-        
-        // Also sync on DOMContentLoaded
-        window.addEventListener('DOMContentLoaded', function() {
-            syncDarkMode();
-        });
-        
-        // Listen for storage changes (when settings are changed in another tab/window)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'darkMode') {
-                syncDarkMode();
-            }
-        });
     </script>
     
 </body>
