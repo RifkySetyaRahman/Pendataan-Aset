@@ -25,21 +25,21 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 #Pegawai Routes
-Route::middleware(['auth'])->prefix('pegawai')->name('pegawai.')->group(function () {
+// Route::middleware(['auth'])->prefix('pegawai')->name('pegawai.')->group(function () {
 
     // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard');
+            ->name('pegawai.dashboard');
 
         // Aset Baru
         Route::get('/aset-baru', [AsetController::class, 'new'])
-            ->name('aset.new');
+            ->name('aset.baru');
 
         // Aset Terpakai
         Route::get('/aset-terpakai', [AsetController::class, 'used'])
-            ->name('aset.used');
+            ->name('aset.terpakai');
 
-});
+// });
 
 
 #Admin Routes
@@ -48,7 +48,7 @@ Route::middleware(['auth'])->prefix('pegawai')->name('pegawai.')->group(function
 //     ->group(function () {
 
     // Dashboard
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        Route::get('/admin-dashboard', [AdminDashboardController::class, 'index'])
             ->name('admin.dashboard');
 
     //Manajemen User
@@ -68,11 +68,13 @@ Route::middleware(['auth'])->prefix('pegawai')->name('pegawai.')->group(function
             ->name('manajemen-aset.create');
         Route::post('/manajemen-aset', [ManajemenAsetController::class, 'store'])
             ->name('manajemen-aset.store');
-        route::get('/manajemen-aset/{aset}/edit', [ManajemenAsetController::class, 'edit'])
+        Route::get('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'show'])
+            ->name('manajemen-aset.show');
+        Route::get('/manajemen-aset/{aset}/edit', [ManajemenAsetController::class, 'edit'])
             ->name('manajemen-aset.edit');
-        route::put('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'update'])
+        Route::put('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'update'])
             ->name('manajemen-aset.update');
-        route::delete('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'destroy'])
+        Route::delete('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'destroy'])
             ->name('manajemen-aset.destroy');
 
         #Kategori Aset

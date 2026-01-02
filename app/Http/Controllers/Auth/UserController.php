@@ -63,7 +63,7 @@ class UserController extends Controller
     ]);
 
     return redirect()
-        ->route('users.create')
+        ->route('users.index')
         ->with('success', 'Pengguna berhasil ditambahkan');
 }
 

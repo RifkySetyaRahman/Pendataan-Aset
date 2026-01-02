@@ -1,33 +1,82 @@
 <?php
-
 namespace App\Http\Controllers\Pegawai;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aset;
+use App\Models\KategoriAset;
+use Illuminate\Http\Request;
 
 class AsetController extends Controller
 {
     /**
-     * Aset dengan status DIPAKAI
+     * ASET TERPAKAI
      */
-    public function used()
+    public function used(Request $request)
     {
-        $asets = Aset::where('status', 'terpakai')
-            ->latest()
-            ->get();
+        // ========================
+        // QUERY DASAR
+        // ========================
+        $query = Aset::with(['kategori', 'kondisi'])
+            ->where('status', 'terpakai');
 
-        return view('pegawai.aset.used', compact('asets'));
-    }
+        // ========================
+        // FILTER
+        // ========================
+        if ($request->filled('category')) {
+            $query->where('category_code', $request->category);
+        }
 
-    /**
-     * Aset dengan status BARU
-     */
-    public function new()
-    {
-        $asets = Aset::where('status', 'baru')
-            ->latest()
-            ->get();
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
 
-        return view('pegawai.aset.new', compact('asets'));
+        // ========================
+        // DATA TABEL
+        // ========================
+        $asets = $query->latest()->paginate(8)->withQueryString();
+
+        // ========================
+        // STATISTIK
+        // ========================
+        $totalTerpakai = Aset::where('status', 'terpakai')->sum('quantity');
+
+        $terpakaiBulanIni = Aset::where('status', 'terpakai')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('quantity');
+
+        $kondisiBaik = Aset::where('status', 'terpakai')
+            ->where('condition_code', 'baik')
+            ->sum('quantity');
+
+        $kondisiRusakRingan = Aset::where('status', 'terpakai')
+            ->where('condition_code', 'rusak_ringan')
+            ->sum('quantity');
+
+        $kondisiRusakBerat = Aset::where('status', 'terpakai')
+            ->where('condition_code', 'rusak_berat')
+            ->sum('quantity');
+
+        $persenBaik = $totalTerpakai ? round(($kondisiBaik / $totalTerpakai) * 100) : 0;
+        $persenRusakRingan = $totalTerpakai ? round(($kondisiRusakRingan / $totalTerpakai) * 100) : 0;
+        $persenRusakBerat = $totalTerpakai ? round(($kondisiRusakBerat / $totalTerpakai) * 100) : 0;
+
+        // ========================
+        // MASTER DATA
+        // ========================
+        $categories = KategoriAset::orderBy('name')->get();
+
+        return view('pegawai.aset.used', compact(
+            'asets',
+            'categories',
+            'totalTerpakai',
+            'terpakaiBulanIni',
+            'kondisiBaik',
+            'kondisiRusakRingan',
+            'kondisiRusakBerat',
+            'persenBaik',
+            'persenRusakRingan',
+            'persenRusakBerat'
+        ));
     }
 }

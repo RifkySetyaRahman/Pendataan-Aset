@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-admin.css">
+    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -89,7 +89,7 @@
                         {{ number_format($kondisiRusakRingan) }}
                     </h3>
                     <p class="text-xs text-amber-600 mt-2">
-                        {{ $persenRingan }}% dari total
+                        {{ $persenRusakRingan }}% dari total
                     </p>
                 </div>
                 <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
@@ -107,7 +107,7 @@
                         {{ number_format($kondisiRusakBerat) }}
                     </h3>
                     <p class="text-xs text-red-600 mt-2">
-                        {{ $persenBerat }}% dari total
+                        {{ $persenRusakBerat }}% dari total
                     </p>
                 </div>
                 <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -120,7 +120,7 @@
 
             
             <section class="bg-white rounded-xl shadow-sm p-4 mb-6">
-    <form method="GET" action="{{ route('aset.index') }}">
+    <form method="GET" action="{{ route('manajemen-aset.index') }}">
         <div class="flex flex-col lg:flex-row gap-3 justify-between">
 
             <!-- FILTER -->
@@ -158,11 +158,6 @@
                 <button class="px-4 py-2 bg-gov-primary text-white rounded-lg text-sm">
                     Cari
                 </button>
-
-                <a href="{{ route('aset.create') }}"
-                    class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm">
-                    + Tambah
-                </a>
             </div>
         </div>
     </form>
@@ -173,10 +168,9 @@
 <section id="gridView" class="hidden mb-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 
-        @forelse ($asets as $aset)
+        @forelse ($aset as $item)
 
         @php
-            // Badge kondisi
             $conditionMap = [
                 'baik' => ['bg-green-100 text-green-700', 'Baik'],
                 'rusak_ringan' => ['bg-amber-100 text-amber-700', 'Rusak Ringan'],
@@ -184,9 +178,8 @@
             ];
 
             [$badgeClass, $conditionText] =
-                $conditionMap[$aset->condition_code] ?? ['bg-gray-100 text-gray-700', 'Tidak Diketahui'];
+                $conditionMap[$item->condition_code] ?? ['bg-gray-100 text-gray-700', 'Tidak Diketahui'];
 
-            // Gradient background random (biar cakep tapi tidak hardcode)
             $gradients = [
                 'from-blue-50 to-blue-100',
                 'from-purple-50 to-purple-100',
@@ -195,68 +188,58 @@
                 'from-amber-50 to-amber-100',
                 'from-rose-50 to-rose-100',
             ];
-            $gradient = $gradients[$aset->id % count($gradients)];
+            $gradient = $gradients[$item->id % count($gradients)];
         @endphp
 
         <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group">
-            <!-- Header -->
             <div class="h-32 bg-gradient-to-br {{ $gradient }} flex items-center justify-center relative">
                 <span class="absolute top-3 right-3 px-2 py-1 {{ $badgeClass }} text-xs font-medium rounded-full">
                     {{ $conditionText }}
                 </span>
             </div>
 
-            <!-- Body -->
             <div class="p-4">
                 <h4 class="font-semibold text-gray-800 mb-1 line-clamp-1">
-                    {{ $aset->name }}
+                    {{ $item->name }}
                 </h4>
 
                 <p class="text-sm text-gray-500 mb-2">
-                    {{ ucfirst(str_replace('-', ' ', $aset->category_code)) }}
+                    {{ ucfirst(str_replace('_', ' ', $item->category_code)) }}
                 </p>
 
-                <!-- Info Status -->
                 <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg mb-3">
-                    <div class="min-w-0">
-                        <p class="text-xs font-medium text-gray-700 truncate">
-                            Status: {{ ucfirst($aset->status) }}
+                    <div>
+                        <p class="text-xs font-medium text-gray-700">
+                            Status: {{ ucfirst($item->status) }}
                         </p>
-                        <p class="text-xs text-gray-400 truncate">
-                            Qty: {{ $aset->quantity }}
+                        <p class="text-xs text-gray-400">
+                            Qty: {{ $item->quantity }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Footer -->
                 <div class="flex items-center justify-between text-xs text-gray-400">
                     <span>
-                        {{ \Carbon\Carbon::parse($aset->purchase_date)->translatedFormat('d M Y') }}
+                        {{ \Carbon\Carbon::parse($item->purchase_date)->translatedFormat('d M Y') }}
                     </span>
 
                     <div class="flex items-center gap-1">
-                        <!-- Detail -->
-                        <a href="{{ route('aset.show', $aset->id) }}"
-                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                           title="Lihat Detail">
+                        <a href="{{ route('manajemen-aset.show', $item->id) }}"
+                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                             <i class="fas fa-eye"></i>
                         </a>
 
-                        <!-- Edit -->
-                        <a href="{{ route('aset.edit', $aset->id) }}"
-                           class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                           title="Edit">
+                        <a href="{{ route('manajemen-aset.edit', $item->id) }}"
+                           class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg">
                             <i class="fas fa-edit"></i>
                         </a>
 
-                        <!-- Hapus -->
-                        <form action="{{ route('aset.destroy', $aset->id) }}"
-                              method="POST"
-                              onsubmit="return confirm('Yakin hapus {{ $aset->name }}?')">
+                        <form action="{{ route('manajemen-aset.destroy', $item->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Yakin hapus {{ $item->name }}?')">
                             @csrf
                             @method('DELETE')
-                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                    title="Hapus">
+                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -274,9 +257,11 @@
     </div>
 </section>
 
+
             
             <!-- Table View -->
-            <section id="tableView" class="mb-6">
+            <tbody class="divide-y divide-gray-100">
+<section id="tableView" class="mb-6">
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full">
@@ -290,47 +275,50 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-    @forelse ($asets as $index => $aset)
+    @forelse ($aset as $index => $item)
         <tr class="hover:bg-gray-50 transition-colors">
             {{-- No --}}
             <td class="px-3 sm:px-6 py-4 text-center text-sm text-gray-600">
-                {{ $asets->firstItem() + $index }}
-            </td>
+    {{ $aset->firstItem() + $index }}
+</td>
+
 
             {{-- Nama Aset --}}
             <td class="px-3 sm:px-6 py-4">
                 <span class="font-medium text-gray-800">
-                    {{ $aset->name }}
+                    {{ $item->name }}
                 </span>
             </td>
 
             {{-- Kategori --}}
             <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">
-                {{ $aset->category_code }}
+                {{ $item->category_code }}
             </td>
 
             {{-- Kondisi --}}
-            <td class="px-3 sm:px-6 py-4">
-                @php
-                    $conditionColor = match($aset->condition_code) {
-                        'baik' => 'bg-green-100 text-green-700',
-                        'rusak_ringan' => 'bg-amber-100 text-amber-700',
-                        'rusak_berat' => 'bg-red-100 text-red-700',
-                        default => 'bg-gray-100 text-gray-600'
-                    };
+            {{-- Kondisi --}}
+<td class="px-3 sm:px-6 py-4">
+    @php
+        $conditionColor = match($item->condition_code) {
+            'baik' => 'bg-green-100 text-green-700',
+            'rusak_ringan' => 'bg-amber-100 text-amber-700',
+            'rusak_berat' => 'bg-red-100 text-red-700',
+            default => 'bg-gray-100 text-gray-600'
+        };
 
-                    $conditionLabel = match($aset->condition_code) {
-                        'baik' => 'Baik',
-                        'rusak_ringan' => 'Rusak Ringan',
-                        'rusak_berat' => 'Rusak Berat',
-                        default => ucfirst($aset->condition_code)
-                    };
-                @endphp
+        $conditionLabel = match($item->condition_code) {
+            'baik' => 'Baik',
+            'rusak_ringan' => 'Rusak Ringan',
+            'rusak_berat' => 'Rusak Berat',
+            default => ucfirst($item->condition_code)
+        };
+    @endphp
 
-                <span class="px-3 py-1 text-xs font-medium rounded-full {{ $conditionColor }}">
-                    {{ $conditionLabel }}
-                </span>
-            </td>
+    <span class="px-3 py-1 text-xs font-medium rounded-full {{ $conditionColor }}">
+        {{ $conditionLabel }}
+    </span>
+</td>
+
 
             {{-- Aksi --}}
             <td class="px-6 py-4">
@@ -339,24 +327,22 @@
     class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
     title="Lihat Detail"
     onclick="openDetailModal(this)"
-    data-name="{{ $aset->name }}"
-    data-sn="{{ $aset->serialnumber }}"
-    data-location="{{ $aset->location }}"
-    data-category="{{ $aset->category_code }}"
-    data-condition="{{ $aset->condition_code }}"
+    data-name="{{ $item->name }}"
+    data-sn="{{ $item->serialnumber }}"
+    data-location="{{ $item->location }}"
+    data-category="{{ $item->category_code }}"
+    data-condition="{{ $item->condition_code }}"
 >
     <i class="fas fa-eye"></i>
 </button>
 
-                    <a href="{{ route('manajemen-aset.edit', $aset->id) }}"
-                        class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg"
-                        title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </a>
+                    <button onclick="openEditModalDirect" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
 
-                    <form action="{{ route('manajemen-aset.destroy', $aset->id) }}"
-                          method="POST"
-                          onsubmit="return confirm('Yakin hapus aset {{ $aset->name }}?')">
+                    <form action="{{ route('manajemen-aset.destroy', $item->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Yakin hapus aset {{ $item->name }}?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -376,7 +362,6 @@
         </tr>
     @endforelse
 </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -390,13 +375,13 @@
         <p class="text-sm text-gray-500">
             Menampilkan
             <span class="font-medium text-gray-700">
-                {{ $asets->firstItem() }}
+                {{ $aset->firstItem() }}
                 -
-                {{ $asets->lastItem() }}
+                {{ $aset->lastItem() }}
             </span>
             dari
             <span class="font-medium text-gray-700">
-                {{ number_format($asets->total()) }}
+                {{ number_format($aset->total()) }}
             </span>
             aset
         </p>
@@ -404,40 +389,40 @@
         {{-- Pagination Button --}}
         <div class="flex items-center gap-1">
             {{-- Previous --}}
-            @if ($asets->onFirstPage())
+            @if ($aset->onFirstPage())
                 <button class="px-3 py-1.5 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
                     <i class="fas fa-chevron-left"></i>
                 </button>
             @else
-                <a href="{{ $asets->previousPageUrl() }}"
+                <a href="{{ $aset->previousPageUrl() }}"
                    class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-chevron-left"></i>
                 </a>
             @endif
 
             {{-- Page Numbers --}}
-            @foreach ($asets->getUrlRange(1, $asets->lastPage()) as $page => $url)
-                @if ($page == $asets->currentPage())
+            @foreach ($aset->getUrlRange(1, $aset->lastPage()) as $page => $url)
+                @if ($page == $aset->currentPage())
                     <span class="px-3 py-1.5 text-sm bg-gov-primary text-white rounded-lg">
                         {{ $page }}
                     </span>
                 @elseif (
                     $page == 1 ||
-                    $page == $asets->lastPage() ||
-                    abs($page - $asets->currentPage()) <= 1
+                    $page == $aset->lastPage() ||
+                    abs($page - $aset->currentPage()) <= 1
                 )
                     <a href="{{ $url }}"
                        class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
                         {{ $page }}
                     </a>
-                @elseif ($page == 2 || $page == $asets->lastPage() - 1)
+                @elseif ($page == 2 || $page == $aset->lastPage() - 1)
                     <span class="px-2 text-gray-400">...</span>
                 @endif
             @endforeach
 
             {{-- Next --}}
-            @if ($asets->hasMorePages())
-                <a href="{{ $asets->nextPageUrl() }}"
+            @if ($aset->hasMorePages())
+                <a href="{{ $aset->nextPageUrl() }}"
                    class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-chevron-right"></i>
                 </a>
@@ -544,6 +529,9 @@
                         <button onclick="openEditModal()" class="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
                             Edit
                         </button>
+                        <button onclick="openEditModalDirect" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
                         <button onclick="closeDetailModal()" class="w-full px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
                             Tutup
                         </button>
@@ -555,143 +543,71 @@
     
     <!-- Edit Modal -->
     <div id="editModal" class="fixed inset-0 z-50 hidden">
-        <div id="editBackdropDesktop" class="modal-backdrop absolute inset-0 bg-black/50 hidden lg:block" onclick="closeEditModal()"></div>
-        <div id="editSheetDesktop" class="modal-sheet lg:modal-sheet-desktop hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-2xl bg-white rounded-2xl shadow-xl lg:max-h-[90vh] overflow-y-auto">
+        <div class="absolute inset-0 bg-black/50" onclick="closeEditModal()"></div>
+        <div id="editSheet" class="absolute bottom-0 left-0 right-0 lg:relative lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 bg-white rounded-t-2xl lg:rounded-2xl shadow-xl w-full lg:max-w-2xl transform transition-transform duration-300 translate-y-full lg:translate-y-0">
             <div class="p-6 lg:p-8">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800">Edit Data Aset</h3>
-                    <button onclick="closeEditModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <h3 class="text-lg font-bold text-gray-800">Edit Data Aset</h3>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
                 </div>
-                
-                <form id="editForm" onsubmit="handleEditSubmit(event)">
-                    <!-- Nama Aset -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Aset</label>
-                        <input type="text" id="editName" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary" required>
-                    </div>
+
+                <form id="editForm" method="POST" action="">
+                    @csrf @method('PUT')
                     
-                    <!-- Grid: Kategori & Kode SN -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <!-- Kategori -->
+                    <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                            <select id="editCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary" required>
-                                <option value="">Pilih Kategori</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Penyimpanan">Penyimpanan</option>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Aset</label>
+                            <input type="text" name="name" id="editName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none" required>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
+                                <select name="category_code" id="editCategory" class="w-full px-4 py-2 border rounded-lg outline-none" required>
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat->code }}">{{ $cat->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serial Number</label>
+                                <input type="text" name="serialnumber" id="editSN" class="w-full px-4 py-2 border rounded-lg font-mono outline-none" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Lokasi/Alamat</label>
+                            <input type="text" name="location" id="editAlamat" class="w-full px-4 py-2 border rounded-lg outline-none" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kondisi</label>
+                            <select name="condition_code" id="editCondition" class="w-full px-4 py-2 border rounded-lg outline-none" required>
+                                @foreach($conditions as $con)
+                                    <option value="{{ $con->code }}">{{ $con->name }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        
-                        <!-- Kode SN -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kode SN</label>
-                            <input type="text" id="editSN" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary" required>
-                        </div>
+
+                        <input type="hidden" name="status" value="terpakai">
+                        <input type="hidden" name="quantity" value="1">
                     </div>
-                    
-                    <!-- Alamat/Lokasi -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Alamat/Lokasi</label>
-                        <input type="text" id="editAlamat" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary" required>
-                    </div>
-                    
-                    <!-- Kondisi -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kondisi</label>
-                        <select id="editCondition" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gov-primary/20 focus:border-gov-primary" required>
-                            <option value="">Pilih Kondisi</option>
-                            <option value="Baik">Baik</option>
-                            <option value="Rusak Ringan">Rusak Ringan</option>
-                            <option value="Rusak Berat">Rusak Berat</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Actions -->
-                    <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                            Simpan Perubahan
-                        </button>
-                        <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
+
+                    <div class="flex gap-3 mt-8 pt-6 border-t">
+                        <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2.5 border text-gray-700 rounded-lg font-semibold">Batal</button>
+                        <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">Simpan Perubahan</button>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <!-- Mobile Bottom Sheet Version -->
-        <div id="editSheetMobile" class="lg:hidden fixed inset-0 z-50 hidden flex flex-col">
-            <div id="editBackdropMobile" class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeEditModal()"></div>
-            <div class="modal-sheet relative mt-auto">
-                <div class="modal-sheet-handle"></div>
-                <div class="modal-sheet-content p-6">
-                    <!-- Header -->
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Edit Aset</h3>
-                    </div>
-                    
-                    <!-- Form -->
-                    <form onsubmit="handleEditSubmit(event)" class="space-y-3">
-                        <!-- Nama Aset -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Nama Aset</label>
-                            <input type="text" id="editNameMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Kategori -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Kategori</label>
-                            <select id="editCategoryMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Penyimpanan">Penyimpanan</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Kode SN -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Kode SN</label>
-                            <input type="text" id="editSNMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Alamat/Lokasi -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Alamat/Lokasi</label>
-                            <input type="text" id="editAlamatMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Kondisi -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Kondisi</label>
-                            <select id="editConditionMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kondisi --</option>
-                                <option value="Baik">Baik</option>
-                                <option value="Rusak Ringan">Rusak Ringan</option>
-                                <option value="Rusak Berat">Rusak Berat</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Actions -->
-                        <div class="flex gap-2 pt-3 border-t border-gray-200">
-                            <button type="submit" class="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                                Simpan
-                            </button>
-                            <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                                Batal
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
     
     <!-- JavaScript -->
     <script>
+        // Open Edit Modal Directly (tanpa detail modal)
+        function openEditModalDirect(id) {
+            const editModal = document.getElementById('editModal');
+            };
         // Check if mobile
         function isMobile() {
             return window.innerWidth < 1024;

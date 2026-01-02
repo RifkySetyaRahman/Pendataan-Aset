@@ -16,68 +16,74 @@ class ManajemenAsetController extends Controller
      * untuk halaman: manajemen-aset.index
      */
     public function index()
-    {
-        // =========================
-        // DATA TABEL (PAGINATION)
-        // =========================
-        $aset = Aset::orderBy('created_at', 'desc')
-            ->paginate(8);
+{
+    // =========================
+    // DATA TABEL
+    // =========================
+    $aset = Aset::orderBy('created_at', 'desc')
+        ->paginate(8);
 
-        // =========================
-        // TOTAL ASET TERPAKAI
-        // =========================
-        $totalTerpakai = Aset::where('status', 'terpakai')
-            ->sum('quantity');
+    // =========================
+    // TOTAL ASET TERPAKAI
+    // =========================
+    $totalTerpakai = Aset::where('status', 'terpakai')
+        ->sum('quantity');
 
-        // TERPAKAI BULAN INI
-        $terpakaiBulanIni = Aset::where('status', 'terpakai')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('quantity');
+    // =========================
+    // TERPAKAI BULAN INI
+    // =========================
+    $terpakaiBulanIni = Aset::where('status', 'terpakai')
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->sum('quantity');
 
-        // =========================
-        // KONDISI ASET TERPAKAI
-        // =========================
-        $baik = Aset::where('status', 'terpakai')
-            ->where('condition_code', 'baik')
-            ->sum('quantity');
+    // =========================
+    // KONDISI ASET
+    // =========================
+    $kondisiBaik = Aset::where('status', 'terpakai')
+        ->where('condition_code', 'baik')
+        ->sum('quantity');
 
-        $rusakRingan = Aset::where('status', 'terpakai')
-            ->where('condition_code', 'rusak_ringan')
-            ->sum('quantity');
+    $kondisiRusakRingan = Aset::where('status', 'terpakai')
+        ->where('condition_code', 'rusak_ringan')
+        ->sum('quantity');
 
-        $rusakBerat = Aset::where('status', 'terpakai')
-            ->where('condition_code', 'rusak_berat')
-            ->sum('quantity');
+    $kondisiRusakBerat = Aset::where('status', 'terpakai')
+        ->where('condition_code', 'rusak_berat')
+        ->sum('quantity');
 
-        // =========================
-        // PERSENTASE KONDISI
-        // =========================
-        $persenBaik = $totalTerpakai
-            ? round(($baik / $totalTerpakai) * 100)
-            : 0;
+    // =========================
+    // PERSENTASE
+    // =========================
+    $persenBaik = $totalTerpakai
+        ? round(($kondisiBaik / $totalTerpakai) * 100)
+        : 0;
 
-        $persenRusakRingan = $totalTerpakai
-            ? round(($rusakRingan / $totalTerpakai) * 100)
-            : 0;
+    $persenRusakRingan = $totalTerpakai
+        ? round(($kondisiRusakRingan / $totalTerpakai) * 100)
+        : 0;
 
-        $persenRusakBerat = $totalTerpakai
-            ? round(($rusakBerat / $totalTerpakai) * 100)
-            : 0;
+    $persenRusakBerat = $totalTerpakai
+        ? round(($kondisiRusakBerat / $totalTerpakai) * 100)
+        : 0;
 
-        return view('manajemen-aset.index', compact(
-            'aset',
-            'totalTerpakai',
-            'terpakaiBulanIni',
-            'baik',
-            'rusakRingan',
-            'rusakBerat',
-            'persenBaik',
-            'persenRusakRingan',
-            'persenRusakBerat'
-        ));
-    }
+    $categories = KategoriAset::orderBy('name')->get();
+    $conditions = KondisiAset::orderBy('name')->get();
 
+    return view('admin.manajemen-aset.index', compact(
+        'aset',
+        'categories',
+        'conditions',
+        'totalTerpakai',
+        'terpakaiBulanIni',
+        'kondisiBaik',
+        'kondisiRusakRingan',
+        'kondisiRusakBerat',
+        'persenBaik',
+        'persenRusakRingan',
+        'persenRusakBerat'
+    ));
+}
     /**
      * DAFTAR ASET BARU
      */
@@ -102,7 +108,7 @@ class ManajemenAsetController extends Controller
         $persenCukup = $totalAset ? round(($cukup / $totalAset) * 100) : 0;
         $persenRusak = $totalAset ? round(($rusak / $totalAset) * 100) : 0;
 
-        return view('manajemen-aset.aset-baru', compact(
+        return view('admin.manajemen-aset.aset', compact(
             'asetBaru',
             'totalAset',
             'asetBaruBulanIni',
@@ -150,6 +156,21 @@ class ManajemenAsetController extends Controller
             ->with('success', 'Aset berhasil ditambahkan');
     }
 
+    public function show($id)
+{
+    $aset = Aset::with(['kategori', 'kondisi'])->findOrFail($id);
+
+    return response()->json([
+        'id' => $aset->id,
+        'name' => $aset->name,
+        'serialnumber' => $aset->serialnumber,
+        'location' => $aset->location,
+        'kategori' => $aset->kategori->name ?? '-',
+        'kondisi' => $aset->kondisi->name ?? '-',
+        'description' => $aset->description,
+    ]);
+}
+
 /**
  * FORM EDIT ASET
  */
@@ -161,10 +182,11 @@ public function edit($id)
     // Ambil data kategori dan kondisi untuk select option
     $categories = KategoriAset::orderBy('name')->get();
     $conditions = KondisiAset::orderBy('name')->get();
-
+     $asetList = Aset::orderBy('name')->get();
     // Kirim data ke view
     return view('admin.manajemen-aset.update', compact(
         'aset',
+        'asetList',
         'categories',
         'conditions'
     ));

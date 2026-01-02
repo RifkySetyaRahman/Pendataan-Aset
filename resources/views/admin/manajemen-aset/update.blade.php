@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-admin.css">
+    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
     <style>
         select {
             appearance: none;
@@ -45,7 +45,7 @@
 <main class="p-4 lg:p-6">
     <div class="bg-white rounded-xl shadow-sm p-6 lg:p-8">
         <form id="allocationForm" 
-              action="{{ route('admin.manajemen-aset.update', $aset->id) }}" 
+              action="{{ route('manajemen-aset.update', $aset->id) }}" 
               method="POST">
             
             @csrf
@@ -132,7 +132,7 @@
 
             <!-- Form Actions -->
             <div class="flex flex-col sm:flex-row items-center gap-3 pt-6 border-t border-gray-200">
-                <a href="{{ route('admin.manajemen-aset.index') }}" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
+                <a href="{{ route('manajemen-aset.index') }}" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
                     <i class="fas fa-times"></i>
                     Batal
                 </a>
@@ -181,14 +181,7 @@
     
     <script>
         // Asset Data
-        const assetData = {
-            1: { nama: 'Router Cisco ASR 1000', sn: 'SN-CISCO-ASR-001', alamat: 'Ruang Server, Lt. 3', kategori: 'Jaringan', kondisi: 'Baik' },
-            2: { nama: 'Switch Cisco Catalyst 9300', sn: 'SN-CISCO-CAT-002', alamat: 'Ruang Jaringan, Lt. 2', kategori: 'Jaringan', kondisi: 'Baik' },
-            3: { nama: 'Access Point Ubiquiti 6E', sn: 'SN-UBIQUITI-AP-003', alamat: 'Ruang Meeting, Lt. 1', kategori: 'Jaringan', kondisi: 'Baik' },
-            4: { nama: 'NAS Storage 24Bay Dell', sn: 'SN-DELL-NAS-004', alamat: 'Ruang Data Center, Lt. 3', kategori: 'Penyimpanan', kondisi: 'Baik' },
-            5: { nama: 'Kabel Fiber Optik 1KM', sn: 'SN-FIBER-KB-005', alamat: 'Gudang, Lt. B1', kategori: 'Jaringan', kondisi: 'Baik' }
-        };
-        
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebarOverlay').classList.toggle('hidden');

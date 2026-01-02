@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-admin.css">
+    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
 </head>
 <body class="bg-gray-100 font-inter">
     
@@ -60,6 +60,7 @@
                             <tr>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama Kondisi</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Kode Kondisi</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Deskripsi</th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                             </tr>
@@ -69,6 +70,7 @@
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4 text-sm text-gray-800">{{ $index + 1 }}</td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $condition->name }}</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ $condition->code }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-600">{{ $condition->description ?? '-' }}</td>
                                     <td class="px-6 py-4 text-sm text-center">
                                         <div class="flex items-center justify-center gap-2">
@@ -76,7 +78,7 @@
                                     onclick="openEditModal(this)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
                                     <i class="fas fa-edit"></i>
                                     </button>
-                        <form action="{{ route('admin.kondisi-aset.destroy', $condition->id) }}" method="POST" class="inline">
+                        <form action="{{ route('kondisi-aset.destroy', $condition->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
@@ -126,7 +128,7 @@
                 </div>
 
                 <!-- Form -->
-                <form id="conditionForm" action="{{ route('admin.kondisi-aset.store') }}" method="POST" class="p-6 space-y-4">
+                <form id="conditionForm" action="{{ route('kondisi-aset.store') }}" method="POST" class="p-6 space-y-4">
                     @csrf
                 <input type="hidden" name="id" id="conditionId">
                 <div>
@@ -449,8 +451,8 @@
         // Manage submenu state based on page location
         window.addEventListener('DOMContentLoaded', function() {
             const currentPage = window.location.pathname;
-            const isMasterDataPage = currentPage.includes('form-kategori-aset') || currentPage.includes('form-kondisi-aset');
-            const isDataAsetPage = currentPage.includes('aset-baru') || currentPage.includes('aset-terpakai');
+            const isMasterDataPage = currentPage.includes('admin.master-data.kategori') || currentPage.includes('admin.master-data.kondisi');
+            const isDataAsetPage = currentPage.includes('admin.manajemen-aset.aset') || currentPage.includes('admin.manajemen-aset.index');
             
             const containers = document.querySelectorAll('.submenu-container');
             containers.forEach(container => {
@@ -513,12 +515,12 @@
             if (!link) return;
             
             const href = link.getAttribute('href');
-            const isMasterDataPage = window.location.pathname.includes('form-kategori-aset') || window.location.pathname.includes('form-kondisi-aset');
-            const isDataAsetPage = window.location.pathname.includes('aset-baru') || window.location.pathname.includes('aset-terpakai');
+            const isMasterDataPage = window.location.pathname.includes('admin.master-data.kategori') || window.location.pathname.includes('admin.master-data.kondisi');
+            const isDataAsetPage = window.location.pathname.includes('admin.manajemen-aset.aset') || window.location.pathname.includes('admin.manajemen-aset.index');
             
             // Check if navigating away from Master Data or Data Aset
-            const isNavigatingAwayFromMasterData = isMasterDataPage && !href.includes('form-kategori-aset') && !href.includes('form-kondisi-aset');
-            const isNavigatingAwayFromDataAset = isDataAsetPage && !href.includes('aset-baru') && !href.includes('aset-terpakai');
+            const isNavigatingAwayFromMasterData = isMasterDataPage && !href.includes('admin.master-data.kategori') && !href.includes('admin.master-data.kondisi');
+            const isNavigatingAwayFromDataAset = isDataAsetPage && !href.includes('admin.manajemen-aset.aset') && !href.includes('admin.manajemen-aset.index');
             
             // Store intent to close submenu if navigating away
             if (isNavigatingAwayFromMasterData) {

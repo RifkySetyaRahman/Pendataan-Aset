@@ -5,24 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KondisiAset;
+use Illuminate\Support\Str;
 
 class KondisiAsetController extends Controller
 {
-    // Menampilkan semua data
     public function index()
     {
         $conditions = KondisiAset::orderBy('name')->get();
-        return view('admin.kondisi-aset.index', compact('conditions'));
+        return view('admin.master-data.kondisi', compact('conditions'));
     }
 
-    // Ambil data single kondisi untuk modal edit via AJAX
     public function edit($id)
     {
         $condition = KondisiAset::findOrFail($id);
         return response()->json($condition);
     }
 
-    // Simpan data baru atau update data lama
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -31,32 +29,45 @@ class KondisiAsetController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        if (!empty($data['id'])) {
-            // Update
-            $condition = KondisiAset::findOrFail($data['id']);
-            $condition->update([
-                'name' => $data['name'],
-                'description' => $data['description'] ?? null,
-            ]);
-            $message = 'Kondisi berhasil diperbarui';
-        } else {
-            // Create
-            KondisiAset::create([
-                'name' => $data['name'],
-                'description' => $data['description'] ?? null,
-            ]);
-            $message = 'Kondisi berhasil ditambahkan';
+        // =========================
+        // AUTO GENERATE CODE
+        // =========================
+        $code = strtoupper(Str::slug($data['name'], '_'));
+
+        // Cegah duplikasi code
+        $exists = KondisiAset::where('code', $code)
+            ->when($data['id'] ?? null, fn ($q) => $q->where('id', '!=', $data['id']))
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors([
+                'name' => 'Nama kondisi menghasilkan kode yang sudah ada.'
+            ])->withInput();
         }
 
-        return redirect()->route('kondisi-aset.index')->with('success', $message);
+        KondisiAset::updateOrCreate(
+            ['id' => $data['id'] ?? null],
+            [
+                'code' => $code,
+                'name' => $data['name'],
+                'description' => $data['description'] ?? null,
+            ]
+        );
+
+        return redirect()
+            ->route('kondisi-aset.index')
+            ->with('success', empty($data['id'])
+                ? 'Kondisi berhasil ditambahkan'
+                : 'Kondisi berhasil diperbarui'
+            );
     }
 
-    // Hapus data
     public function destroy($id)
     {
-        $condition = KondisiAset::findOrFail($id);
-        $condition->delete();
+        KondisiAset::findOrFail($id)->delete();
 
-        return redirect()->route('kondisi-aset.index')->with('success', 'Kondisi berhasil dihapus');
+        return redirect()
+            ->route('kondisi-aset.index')
+            ->with('success', 'Kondisi berhasil dihapus');
     }
 }

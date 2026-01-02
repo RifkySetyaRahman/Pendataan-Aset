@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-admin.css">
+    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
 
 </head>
 <body class="bg-gray-100 font-inter">
@@ -49,7 +49,7 @@
             <div>
                 <p class="text-sm text-gray-500 mb-1">Total Aset Baru</p>
                 <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
-                    {{ $totalAsetBaru }}
+                    {{ $totalAset }}
                 </h3>
 
                 @if ($asetBaruBulanIni > 0)
@@ -127,23 +127,9 @@
 </section>
 
             
-            <!-- Filter & Actions Bar -->
+            <!-- Actions Bar -->
 <section class="bg-white rounded-xl shadow-sm p-4 mb-6">
     <div class="flex flex-col sm:flex-row items-end gap-3 justify-between">
-
-        <!-- Filter Kategori -->
-        <div class="w-full sm:w-auto">
-            <select id="mainCategoryFilter"
-                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600
-                       focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                onchange="filterAssets()">
-                <option value="">Semua</option>
-                <option value="infrastruktur-pasif">Infrastruktur Pasif</option>
-                <option value="perangkat-aktif">Perangkat Aktif</option>
-                <option value="power">Power</option>
-                <option value="tools">Tools</option>
-            </select>
-        </div>
 
         <!-- Search & Button -->
         <div class="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
@@ -158,7 +144,7 @@
             </div>
 
             <!-- Tambah Aset -->
-            <a href="{{ route('admin.aset.create') }}"
+            <a href="{{ route('manajemen-aset.create') }}"
                class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2
                       bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
                 <i class="fas fa-plus"></i>
@@ -166,58 +152,7 @@
             </a>
         </div>
     </div>
-</section>
-
-            
-            <!-- Grid View (Hidden by default) -->
-            <!-- Grid Aset Baru dari Database -->
-<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-
-    @forelse ($asetBaru as $aset)
-        <div class="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
-
-            <!-- Header Card -->
-            <div class="h-32 bg-blue-50 flex items-center justify-center relative">
-                <i class="fas fa-box text-5xl text-blue-400"></i>
-
-                <span class="absolute top-3 right-3 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                    {{ ucfirst($aset->status) }}
-                </span>
-            </div>
-
-            <!-- Body Card -->
-            <div class="p-4">
-                <h4 class="font-semibold text-gray-800 line-clamp-1">
-                    {{ $aset->name }}
-                </h4>
-
-                <p class="text-sm text-gray-500">
-                    {{ $aset->category_code }} • {{ $aset->location }}
-                </p>
-
-                <p class="text-xs text-gray-400">
-                    SN: {{ $aset->serialnumber }}
-                </p>
-
-                <div class="flex justify-between items-center mt-3 text-xs text-gray-400">
-                    <span>
-                        <i class="fas fa-calendar-alt mr-1"></i>
-                        {{ \Carbon\Carbon::parse($aset->purchase_date)->format('d M Y') }}
-                    </span>
-                    <span>Qty: {{ $aset->quantity }}</span>
-                </div>
-            </div>
-
-        </div>
-    @empty
-        <p class="col-span-full text-center text-gray-500">
-            Tidak ada aset baru
-        </p>
-    @endforelse
-
-</section>
-
-            
+</section>    
             <!-- Table View -->
             <section id="tableView" class="mb-6">
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -279,25 +214,27 @@
                 <div class="flex items-center justify-center gap-2">
 
                     <!-- Alokasikan -->
-                    <a href="{{ route('admin.aset.alokasi', $aset->id) }}"
+                    <a href="{{ route('manajemen-aset.edit', $aset->id) }}"
                        class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700">
                         <i class="fas fa-share-from-square"></i>
                     </a>
 
                     <!-- Detail -->
-                    <a href="{{ route('admin.aset.show', $aset->id) }}"
-                       class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-                        <i class="fas fa-eye"></i>
-                    </a>
+                    <button
+    type="button"
+    onclick="openDetailModal({{ $aset->id }})"
+    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+    <i class="fas fa-eye"></i>
+</button>
 
                     <!-- Edit -->
-                    <a href="{{ route('admin.aset.edit', $aset->id) }}"
+                    <a href="{{ route('manajemen-aset.edit', $aset->id) }}"
                        class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg">
                         <i class="fas fa-edit"></i>
                     </a>
 
                     <!-- Hapus -->
-                    <form action="{{ route('admin.aset.destroy', $aset->id) }}"
+                    <form action="{{ route('manajemen-aset.destroy', $aset->id) }}"
                           method="POST"
                           onsubmit="return confirm('Yakin hapus aset {{ $aset->name }}?')">
                         @csrf
@@ -320,13 +257,11 @@
         </tr>
     @endforelse
 </tbody>
-
                         </table>
                     </div>
                 </div>
             </section>
-            
-            <!-- Pagination -->
+             
             <!-- Pagination -->
 <section class="bg-white rounded-xl shadow-sm p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -404,265 +339,74 @@
         
     </div>
     
-    <!-- Detail Modal -->
-    <div id="detailModal" class="fixed inset-0 z-50 hidden">
-        <div id="detailBackdropDesktop" class="modal-backdrop absolute inset-0 bg-black/50 hidden lg:block" onclick="closeDetailModal()"></div>
-        <div id="detailSheetDesktop" class="modal-sheet lg:modal-sheet-desktop hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-2xl bg-white rounded-2xl shadow-xl lg:max-h-[90vh] overflow-y-auto">
-            <div class="p-6 lg:p-8">
-                <!-- Header -->
-                <div class="mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Detail Aset Baru</h3>
-                    <p id="modalName" class="text-lg font-semibold text-gray-700 mt-2">-</p>
-                </div>
-                
-                <!-- Main Information Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b border-gray-200">
-                    <!-- Kode SN -->
-                    <div>
-                        <p class="text-sm text-gray-500 font-semibold uppercase tracking-wide mb-2">Kode SN</p>
-                        <p id="modalSN" class="text-lg font-medium text-gray-800 font-mono bg-gray-50 px-3 py-2 rounded">-</p>
-                    </div>
-                    
-                    <!-- Alamat -->
-                    <div>
-                        <p class="text-sm text-gray-500 font-semibold uppercase tracking-wide mb-2">Alamat/Lokasi</p>
-                        <p id="modalAlamat" class="text-lg font-medium text-gray-800">-</p>
-                    </div>
-                    
-                    <!-- Kategori -->
-                    <div>
-                        <p class="text-sm text-gray-500 font-semibold uppercase tracking-wide mb-2">Kategori</p>
-                        <p id="modalCategory" class="text-lg font-medium text-gray-800">Jaringan</p>
-                    </div>
-                    
-                    <!-- Kondisi -->
-                    <div>
-                        <p class="text-sm text-gray-500 font-semibold uppercase tracking-wide mb-2">Kondisi</p>
-                        <span id="modalConditionBadge" class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                            <span id="modalCondition">Baik</span>
-                        </span>
-                    </div>
-                </div>
-                
-                <!-- Keterangan -->
-                <div class="mb-6">
-                    <h5 class="text-sm text-gray-500 font-semibold uppercase tracking-wide mb-3">Keterangan</h5>
-                    <p class="text-gray-700 leading-relaxed">
-                        Router core generasi terbaru untuk infrastruktur jaringan backbone. Sudah dilengkapi dengan lisensi Cisco SmartNet Extended. Kompatibel dengan semua protokol routing standar industri. Dalam kondisi baru dan belum digunakan.
-                    </p>
-                </div>
-                
-                <!-- Actions -->
-                <div class="flex items-center gap-3 pt-6 border-t border-gray-200">
-                    <button onclick="openAllocationModal()" class="flex-1 flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                        Alokasikan Aset
-                    </button>
-                    <button onclick="closeDetailModal()" class="flex-1 flex items-center justify-center px-4 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
-                        Batal
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Bottom Sheet Version -->
-        <div id="detailSheetMobile" class="lg:hidden fixed inset-0 z-50 hidden flex flex-col">
-            <div id="detailBackdropMobile" class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
-            <div class="modal-sheet relative mt-auto">
-                <div class="modal-sheet-handle"></div>
-                <div class="modal-sheet-content p-6">
-                    <!-- Header -->
-                    <div class="mb-4">
-                        <h3 class="text-xl font-bold text-gray-800">Detail Aset</h3>
-                        <p id="modalNameMobile" class="text-base font-semibold text-gray-700 mt-1">-</p>
-                    </div>
-                    
-                    <!-- Main Information -->
-                    <div class="space-y-3 mb-5 pb-5 border-b border-gray-200">
-                        <!-- Kode SN -->
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Kode SN</p>
-                            <p id="modalSNMobile" class="font-medium text-gray-800 text-sm font-mono bg-gray-50 px-2 py-1 rounded">-</p>
-                        </div>
-                        
-                        <!-- Alamat -->
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Alamat/Lokasi</p>
-                            <p id="modalAlamatMobile" class="font-medium text-gray-800 text-sm">-</p>
-                        </div>
-                        
-                        <!-- Kategori -->
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Kategori</p>
-                            <p id="modalCategoryMobile" class="font-medium text-gray-800 text-sm">Jaringan</p>
-                        </div>
-                        
-                        <!-- Kondisi -->
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Kondisi</p>
-                            <p id="modalConditionMobile" class="font-medium text-gray-800 text-sm">Baik</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Keterangan -->
-                    <div class="mb-5">
-                        <h5 class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-2">Keterangan</h5>
-                        <p class="text-gray-700 text-sm leading-relaxed">
-                            Router core generasi terbaru untuk infrastruktur jaringan backbone. Sudah dilengkapi dengan lisensi Cisco SmartNet Extended.
-                        </p>
-                    </div>
-                    
-                    <!-- Actions -->
-                    <div class="flex flex-col gap-2 pt-4 border-t border-gray-200">
-                        <button onclick="openAllocationModal()" class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                            Alokasikan Aset
-                        </button>
-                        <button onclick="closeDetailModal()" class="w-full flex items-center justify-center px-4 py-3 text-gray-600 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors">
-                            Batal
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     
-    <!-- Edit Modal -->
-    <div id="editModal" class="fixed inset-0 z-50 hidden">
-        <div id="editBackdropDesktop" class="modal-backdrop absolute inset-0 bg-black/50 hidden lg:block" onclick="closeEditModal()"></div>
-        <div id="editSheetDesktop" class="modal-sheet lg:modal-sheet-desktop hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-2xl bg-white rounded-2xl shadow-xl lg:max-h-[90vh] overflow-y-auto">
-            <div class="p-6 lg:p-8">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Edit Aset</h3>
-                    <button onclick="closeEditModal()" class="lg:flex hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <!-- Form -->
-                <form onsubmit="handleEditSubmit(event)" class="space-y-6">
-                    <!-- Nama Aset -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Aset</label>
-                        <input type="text" id="editName" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                    </div>
-                    
-                    <!-- Kategori & SN (Grid) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
-                            <select id="editCategory" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Penyimpanan">Penyimpanan</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kode SN</label>
-                            <input type="text" id="editSN" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                    </div>
-                    
-                    <!-- Alamat & Kondisi (Grid) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat/Lokasi</label>
-                            <input type="text" id="editAlamat" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kondisi</label>
-                            <select id="editCondition" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kondisi --</option>
-                                <option value="Baik">Baik</option>
-                                <option value="Rusak Ringan">Rusak Ringan</option>
-                                <option value="Rusak Berat">Rusak Berat</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Actions -->
-                    <div class="flex items-center gap-3 pt-6 border-t border-gray-200">
-                        <button type="submit" class="flex-1 flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                            Simpan Perubahan
-                        </button>
-                        <button type="button" onclick="closeEditModal()" class="flex items-center justify-center px-4 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <!-- DETAIL MODAL -->
+<div id="detailModal" class="fixed inset-0 z-50 hidden">
 
-        <!-- Mobile Bottom Sheet Version -->
-        <div id="editSheetMobile" class="lg:hidden fixed inset-0 z-50 hidden flex flex-col">
-            <div id="editBackdropMobile" class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeEditModal()"></div>
-            <div class="modal-sheet relative mt-auto">
-                <div class="modal-sheet-handle"></div>
-                <div class="modal-sheet-content p-6">
-                    <!-- Header with Close Button -->
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-xl font-bold text-gray-800">Edit Aset</h3>
-                        <button onclick="closeEditModal()" class="p-2 -mr-2 text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times text-lg"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Form -->
-                    <form onsubmit="handleEditSubmit(event)" class="space-y-4">
-                        <!-- Nama Aset -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase">Nama Aset</label>
-                            <input type="text" id="editNameMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Kategori -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase">Kategori</label>
-                            <select id="editCategoryMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Penyimpanan">Penyimpanan</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Kode SN -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase">Kode SN</label>
-                            <input type="text" id="editSNMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Alamat/Lokasi -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase">Alamat/Lokasi</label>
-                            <input type="text" id="editAlamatMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        </div>
-                        
-                        <!-- Kondisi -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5 uppercase">Kondisi</label>
-                            <select id="editConditionMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="">-- Pilih Kondisi --</option>
-                                <option value="Baik">Baik</option>
-                                <option value="Rusak Ringan">Rusak Ringan</option>
-                                <option value="Rusak Berat">Rusak Berat</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Actions -->
-                        <div class="flex gap-2 pt-4 border-t border-gray-200">
-                            <button type="submit" class="flex-1 flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                                Simpan
-                            </button>
-                            <button type="button" onclick="closeEditModal()" class="flex-1 flex items-center justify-center px-4 py-3 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
-                                Batal
-                            </button>
-                        </div>
-                    </form>
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
+
+    <!-- DESKTOP -->
+    <div class="hidden lg:flex items-center justify-center h-full">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto p-6 lg:p-8">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Detail Aset</h3>
+                <p id="modalName" class="text-lg font-semibold text-gray-700 mt-1">-</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mb-6 border-b pb-6">
+                <div>
+                    <p class="label">Kode SN</p>
+                    <p id="modalSN" class="value-mono">-</p>
                 </div>
+                <div>
+                    <p class="label">Lokasi</p>
+                    <p id="modalAlamat" class="value">-</p>
+                </div>
+                <div>
+                    <p class="label">Kategori</p>
+                    <p id="modalCategory" class="value">-</p>
+                </div>
+                <div>
+                    <p class="label">Kondisi</p>
+                    <span id="modalConditionBadge" class="badge">
+                        <span id="modalCondition">-</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="label">Keterangan</p>
+                <p id="modalDescription" class="text-gray-700">-</p>
+            </div>
+
+            <div class="flex gap-3 pt-6 border-t">
+                <button onclick="openAllocationModal()" class="btn-primary">Alokasikan</button>
+                <button onclick="closeDetailModal()" class="btn-secondary">Tutup</button>
             </div>
         </div>
     </div>
+
+    <!-- MOBILE -->
+    <div class="lg:hidden fixed inset-x-0 bottom-0 bg-white rounded-t-2xl p-6">
+        <div class="mb-4">
+            <h3 class="text-lg font-bold">Detail Aset</h3>
+            <p id="modalNameMobile" class="font-semibold">-</p>
+        </div>
+
+        <div class="space-y-3 border-b pb-4 mb-4">
+            <div><span class="label">SN</span><p id="modalSNMobile">-</p></div>
+            <div><span class="label">Lokasi</span><p id="modalAlamatMobile">-</p></div>
+            <div><span class="label">Kategori</span><p id="modalCategoryMobile">-</p></div>
+            <div><span class="label">Kondisi</span><p id="modalConditionMobile">-</p></div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="openAllocationModal()" class="btn-primary">Alokasikan</button>
+            <button onclick="closeDetailModal()" class="btn-secondary">Tutup</button>
+        </div>
+    </div>
+</div>
 
     <!-- Allocation Modal -->
     <div id="allocationModal" class="fixed inset-0 z-50 hidden">
@@ -804,43 +548,6 @@
     
     <!-- JavaScript -->
     <script>
-        // Global Asset Data
-        const assetData = {
-            1: {
-                name: 'Laptop Dell Latitude 5520',
-                sn: 'SN-DELL-LT-001',
-                alamat: 'Ruang Admin, Lt. 2',
-                category: 'Elektronik',
-                condition: 'Baik',
-                quantity: '1',
-                date: '15 Jan 2024',
-                allocationDate: '20 Jan 2024',
-                notes: 'Aset dalam kondisi baik dan digunakan untuk keperluan operasional harian.'
-            },
-            2: {
-                name: 'Monitor Samsung 27"',
-                sn: 'SN-SAMSUNG-MON-002',
-                alamat: 'Ruang Meeting, Lt. 1',
-                category: 'Elektronik',
-                condition: 'Baik',
-                quantity: '1',
-                date: '20 Feb 2024',
-                allocationDate: '25 Feb 2024',
-                notes: 'Monitor dalam kondisi sempurna, layar jernih tanpa cacat.'
-            },
-            3: {
-                name: 'Printer HP LaserJet Pro',
-                sn: 'SN-HP-PRINTER-003',
-                alamat: 'Ruang Printer, Lt. 1',
-                category: 'Elektronik',
-                condition: 'Rusak Ringan',
-                quantity: '1',
-                date: '05 Mar 2023',
-                allocationDate: '10 Mar 2023',
-                notes: 'Printer masih berfungsi namun penggaris kertas perlu perbaikan.'
-            }
-        };
-        
         // Check if mobile
         function isMobile() {
             return window.innerWidth < 1024;
@@ -855,115 +562,59 @@
             overlay.classList.toggle('hidden');
         }
         
+                // Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+        
         // Toggle Submenu
         function toggleSubmenu(button) {
             const container = button.closest('.submenu-container');
             const submenu = container.querySelector('.submenu');
             const chevron = button.querySelector('.fa-chevron-down');
-            const menuText = button.querySelector('.sidebar-text');
             
             submenu.classList.toggle('open');
             chevron.classList.toggle('rotate-180');
-            
-            // Save state to sessionStorage
-            if (menuText && menuText.textContent === 'Data Aset') {
-                sessionStorage.setItem('dataAsetSubmenuOpen', submenu.classList.contains('open'));
-            }
         }
-
-        // Manage submenu state based on page location
         
-        window.addEventListener('DOMContentLoaded', function() {
-            const currentPage = window.location.pathname;
-            const isMasterDataPage = currentPage.includes('form-kategori-aset') || currentPage.includes('form-kondisi-aset');
-            const isDataAsetPage = currentPage.includes('aset-baru') || currentPage.includes('aset-terpakai');
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
             
-            const containers = document.querySelectorAll('.submenu-container');
-            containers.forEach(container => {
-                const button = container.querySelector('button');
-                const menuText = button.querySelector('.sidebar-text');
-                const submenu = container.querySelector('.submenu');
-                const chevron = button.querySelector('.fa-chevron-down');
-                
-                // Open appropriate submenu without animation and add active class
-                if (isMasterDataPage && menuText && menuText.textContent === 'Master Data') {
-                    button.classList.add('active');
-                    submenu.classList.add('no-transition');
-                    chevron.classList.add('no-transition');
-                    // Ensure it has open class
-                    if (!submenu.classList.contains('open')) {
-                        submenu.classList.add('open');
-                    }
-                    // Ensure chevron is rotated
-                    if (!chevron.classList.contains('rotate-180')) {
-                        chevron.classList.add('rotate-180');
-                    }
-                    // Remove no-transition after animation would have completed
-                    setTimeout(() => {
-                        submenu.classList.remove('no-transition');
-                        chevron.classList.remove('no-transition');
-                    }, 50);
-                } else if (isDataAsetPage && menuText && menuText.textContent === 'Data Aset') {
-                    button.classList.add('active');
-                    
-                    // Check if user has set a preference
-                    const savedState = sessionStorage.getItem('dataAsetSubmenuOpen');
-                    
-                    // If no saved state, open by default. If saved state exists, respect it.
-                    if (savedState === null || savedState === 'true') {
-                        submenu.classList.add('no-transition');
-                        chevron.classList.add('no-transition');
-                        // Ensure it has open class
-                        if (!submenu.classList.contains('open')) {
-                            submenu.classList.add('open');
-                        }
-                        // Ensure chevron is rotated
-                        if (!chevron.classList.contains('rotate-180')) {
-                            chevron.classList.add('rotate-180');
-                        }
-                        // Remove no-transition after animation would have completed
-                        setTimeout(() => {
-                            submenu.classList.remove('no-transition');
-                            chevron.classList.remove('no-transition');
-                        }, 50);
-                    } else if (savedState === 'false') {
-                        // User manually closed it - keep it closed, remove classes
-                        submenu.classList.remove('open');
-                        chevron.classList.remove('rotate-180');
-                    }
-                } else {
-                    // Close other submenus
-                    button.classList.remove('active');
-                    if (submenu.classList.contains('open')) {
-                        submenu.classList.remove('open');
-                    }
-                    if (chevron.classList.contains('rotate-180')) {
-                        chevron.classList.remove('rotate-180');
-                    }
+            if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
+                if (!sidebar.contains(event.target) && !event.target.closest('[onclick="toggleSidebar()"]')) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+        
+        // Active menu highlight
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!this.closest('.submenu-container') || !this.querySelector('.fa-chevron-down')) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
                 }
             });
-        });
-
-        // Handle navigation to close submenu when leaving Master Data or Data Aset
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[href]');
-            if (!link) return;
-            
-            const href = link.getAttribute('href');
-            const isMasterDataPage = window.location.pathname.includes('form-kategori-aset') || window.location.pathname.includes('form-kondisi-aset');
-            const isDataAsetPage = window.location.pathname.includes('aset-baru') || window.location.pathname.includes('aset-terpakai');
-            
-            // Check if navigating away from Master Data or Data Aset
-            const isNavigatingAwayFromMasterData = isMasterDataPage && !href.includes('form-kategori-aset') && !href.includes('form-kondisi-aset');
-            const isNavigatingAwayFromDataAset = isDataAsetPage && !href.includes('aset-baru') && !href.includes('aset-terpakai');
-            
-            // Store intent to close submenu if navigating away
-            if (isNavigatingAwayFromMasterData) {
-                sessionStorage.setItem('closeMasterDataSubmenu', 'true');
-            }
-            if (isNavigatingAwayFromDataAset) {
-                sessionStorage.setItem('closeDataAsetSubmenu', 'true');
-            }
         });
         
         // View Toggle (Grid/Table)

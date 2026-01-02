@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style-employee.css">
+    <link rel="stylesheet" href="{{ asset('css/style-employee.css') }}">
 </head>
 <body class="bg-gray-100 font-inter flex flex-col min-h-screen">
     
@@ -37,183 +37,204 @@
         </header>
         
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-4 lg:p-6">
-            
-            <!-- Stats Cards -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
-                <!-- Total Aset Terpakai -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-base text-gray-500 mb-1">Total Aset Terpakai</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">126</h3>
-                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>8 ditambah bulan ini</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-box-open text-amber-600 text-xl"></i>
-                        </div>
-                    </div>
+        <main class="p-4 lg:p-6">
+
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-6">
+
+        <!-- Total Terpakai -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Total Terpakai</p>
+                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
+                        {{ number_format($totalTerpakai) }}
+                    </h3>
+                    <p class="text-xs text-blue-600 mt-2 flex items-center gap-1">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>
+                            {{ $terpakaiBulanIni > 0 ? $terpakaiBulanIni.' bulan ini' : 'Tidak ada bulan ini' }}
+                        </span>
+                    </p>
                 </div>
-                
-                <!-- Aset Kondisi Baik -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-base text-gray-500 mb-1">Kondisi Baik</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">110</h3>
-                            <p class="text-xs text-green-600 mt-2 flex items-center gap-1">
-                                <span>87%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
-                        </div>
-                    </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-box-open text-blue-600 text-xl"></i>
                 </div>
-                
-                <!-- Aset Rusak Ringan -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-base text-gray-500 mb-1">Rusak Ringan</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">12</h3>
-                            <p class="text-xs text-yellow-600 mt-2 flex items-center gap-1">
-                                <span>10%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-exclamation-circle text-yellow-600 text-xl"></i>
-                        </div>
-                    </div>
+            </div>
+        </div>
+
+        <!-- Kondisi Baik -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Kondisi Baik</p>
+                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
+                        {{ number_format($kondisiBaik) }}
+                    </h3>
+                    <p class="text-xs text-green-600 mt-2">
+                        {{ $persenBaik }}% dari total
+                    </p>
                 </div>
-                
-                <!-- Aset Rusak Berat -->
-                <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-base text-gray-500 mb-1">Rusak Berat</p>
-                            <h3 class="text-2xl lg:text-3xl font-bold text-gray-800">4</h3>
-                            <p class="text-xs text-red-600 mt-2 flex items-center gap-1">
-                                <span>3%</span>
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-times-circle text-red-600 text-xl"></i>
-                        </div>
-                    </div>
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-circle-check text-green-600 text-xl"></i>
                 </div>
-            </section>
+            </div>
+        </div>
+
+        <!-- Rusak Ringan -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Rusak Ringan</p>
+                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
+                        {{ number_format($kondisiRusakRingan) }}
+                    </h3>
+                    <p class="text-xs text-amber-600 mt-2">
+                        {{ $persenRusakRingan }}% dari total
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-triangle-exclamation text-amber-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rusak Berat -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Rusak Berat</p>
+                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800">
+                        {{ number_format($kondisiRusakBerat) }}
+                    </h3>
+                    <p class="text-xs text-red-600 mt-2">
+                        {{ $persenRusakBerat }}% dari total
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-circle-xmark text-red-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+    </section>
             
             <!-- Filter & Actions Bar -->
-            <section class="bg-white rounded-xl shadow-sm p-4 mb-6">
-                <div class="flex flex-col sm:flex-row items-end gap-3 justify-between">
-                    <!-- Filter by Kategori -->
-                    <div class="w-full sm:w-auto">
-                        <select class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                            <option value="">Semua Kategori</option>
-                            <option value="perangkat-kantor">Perangkat Kantor</option>
-                            <option value="komputer">Komputer</option>
-                            <option value="jaringan">Jaringan</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Search Bar -->
-                    <div class="relative w-full sm:w-48">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="text" placeholder="Cari aset..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                    </div>
+            <!-- Filter & Actions Bar -->
+<section class="bg-white rounded-xl shadow-sm p-4 mb-6">
+    <form method="GET" action="{{ route('manajemen-aset.index') }}"
+          class="flex flex-col sm:flex-row items-end gap-3 justify-between">
+
+        <!-- Filter by Kategori -->
+        <div class="w-full sm:w-auto">
+            <select name="category"
+                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600
+                       focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+
+                <option value="">Semua Kategori</option>
+
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}"
+                        {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative w-full sm:w-48">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text"
+                   name="search"
+                   value="{{ request('search') }}"
+                   placeholder="Cari aset..."
+                   class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm
+                          focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+        </div>
+
+        <!-- Submit otomatis -->
+        <button class="hidden">Filter</button>
+    </form>
+</section>
                 </div>
             </section>
             
             <!-- Table View -->
-            <section class="mb-6 bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-gray-200 bg-gray-50">
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">No</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nama Aset</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Kategori</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Kondisi</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Lokasi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Row 1 -->
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">1</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Laptop ASUS VivoBook</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Komputer</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Meja Kerja A1</td>
-                            </tr>
-                            
-                            <!-- Row 2 -->
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">2</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Scanner Canon LiDE</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Bersama</td>
-                            </tr>
-                            
-                            <!-- Row 3 -->
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">3</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Proyektor Epson EB</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium inline-block">
-                                        <span class="hidden sm:inline">Rusak Ringan</span>
-                                        <span class="sm:hidden">R. Ringan</span>
-                                    </span>
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Rapat</td>
-                            </tr>
-                            
-                            <!-- Row 4 -->
-                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">4</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">Kursi Kantor Ergonomis</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Furniture</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium inline-block">
-                                        <span class="hidden sm:inline">Rusak Berat</span>
-                                        <span class="sm:hidden">R. Berat</span>
-                                    </span>
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Meja Kerja</td>
-                            </tr>
-                            
-                            <!-- Row 5 -->
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800">5</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-800 font-medium">AC Split LG 2 PK</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Perangkat Kantor</td>
-                                <td class="px-3 sm:px-6 py-4 text-sm">
-                                    <span class="px-1.5 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium whitespace-nowrap">Digunakan</span>
-                                </td>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Kepala</td>
-                            </tr>
-                                <td class="px-3 sm:px-6 py-4 text-sm text-gray-600">Ruang Kepala</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <section class="mb-4 bg-white rounded-lg shadow-sm overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b bg-gray-50">
+                        <th class="px-3 py-2 text-left font-semibold text-gray-600 w-10">No</th>
+                        <th class="px-3 py-2 text-left font-semibold text-gray-600">Nama Aset</th>
+                        <th class="px-3 py-2 text-left font-semibold text-gray-600">Kategori</th>
+                        <th class="px-3 py-2 text-left font-semibold text-gray-600">Kondisi</th>
+                        <th class="px-3 py-2 text-left font-semibold text-gray-600">Lokasi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($asets as $index => $aset)
+                        <tr class="border-b last:border-0 hover:bg-gray-50 transition">
+                            <td class="px-3 py-2 text-gray-700">
+                                {{ $asets->firstItem() + $index }}
+                            </td>
+
+                            <td class="px-3 py-2 text-gray-800 font-medium">
+                                {{ $aset->nama_aset }}
+                            </td>
+
+                            <td class="px-3 py-2 text-gray-600">
+                                {{ $aset->kategori->name ?? '-' }}
+                            </td>
+
+                            <td class="px-3 py-2">
+                                @php
+                                    $badge = match ($aset->kondisi->code ?? '') {
+                                        'baik'   => 'bg-green-100 text-green-700',
+                                        'cukup'  => 'bg-yellow-100 text-yellow-700',
+                                        'rusak'  => 'bg-red-100 text-red-700',
+                                        default  => 'bg-gray-100 text-gray-600',
+                                    };
+                                @endphp
+
+                                <span class="px-2 py-0.5 rounded text-xs font-medium {{ $badge }}">
+                                    {{ $aset->kondisi->name ?? '-' }}
+                                </span>
+                            </td>
+
+                            <td class="px-3 py-2 text-gray-600">
+                                {{ $aset->lokasi ?? '-' }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-3 py-6 text-center text-gray-500">
+                                Tidak ada data aset
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</div>
             
             <!-- Pagination -->
             <section class="flex items-center justify-between px-4 py-4 bg-white rounded-xl shadow-sm mb-6">
-                <div class="text-sm text-gray-600">
-                    Menampilkan <span class="font-semibold">1</span> hingga <span class="font-semibold">5</span> dari <span class="font-semibold">126</span> aset
-                </div>
+                <<div class="text-sm text-gray-600">
+    Menampilkan
+    <span class="font-semibold">{{ $asets->firstItem() }}</span>
+    hingga
+    <span class="font-semibold">{{ $asets->lastItem() }}</span>
+    dari
+    <span class="font-semibold">{{ $asets->total() }}</span>
+    aset
+</div>
+
                 <div class="flex items-center gap-2">
                     <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                         <i class="fas fa-chevron-left"></i>

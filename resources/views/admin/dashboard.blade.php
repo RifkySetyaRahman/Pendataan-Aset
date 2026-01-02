@@ -147,7 +147,9 @@
                                     stroke-dashoffset="-{{ $baikDash + $rrDash }}"/>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-transparent to-transparent">
-                                    <span class="text-4xl font-bold text-gray-800">75%</span>
+                                    <span class="text-4xl font-bold text-gray-800">
+                                    {{ $persenBaik }}%
+                                    </span>
                                     <span class="text-sm text-gray-500 mt-1">Kondisi Baik</span>
                                 </div>
                             </div>
@@ -163,7 +165,12 @@
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800">Baik</p>
                                     <p class="text-xs text-gray-600 mt-0.5">Kondisi optimal, layak pakai</p>
-                                    <p class="text-lg font-bold text-blue-600 mt-2">2,135 aset <span class="text-sm text-gray-500 font-normal">(75%)</span></p>
+                                    <p class="text-lg font-bold text-green-600 mt-2">
+            {{ $baik }} aset
+            <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenBaik }}%)
+            </span>
+        </p>
                                 </div>
                             </div>
                             
@@ -175,7 +182,12 @@
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800">Rusak Ringan</p>
                                     <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan minor</p>
-                                    <p class="text-lg font-bold text-amber-600 mt-2">427 aset <span class="text-sm text-gray-500 font-normal">(15%)</span></p>
+                                    <p class="text-lg font-bold text-yellow-600 mt-2">
+            {{ $rusakRingan }} aset
+            <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenRusakRingan }}%)
+            </span>
+        </p>
                                 </div>
                             </div>
                             
@@ -187,7 +199,9 @@
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800">Rusak Berat</p>
                                     <p class="text-xs text-gray-600 mt-0.5">Perlu perbaikan besar</p>
-                                    <p class="text-lg font-bold text-red-600 mt-2">285 aset <span class="text-sm text-gray-500 font-normal">(10%)</span></p>
+                                    <p class="text-lg font-bold text-red-600 mt-2">{{ $rusakBerat }} aset <span class="text-sm text-gray-500 font-normal">
+                ({{ $persenRusakBerat }}%)
+            </span></p>
                                 </div>
                             </div>
                         </div>

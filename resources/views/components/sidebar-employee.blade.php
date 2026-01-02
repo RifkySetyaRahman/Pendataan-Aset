@@ -17,7 +17,7 @@
     <!-- Navigation Menu -->
     <nav class="px-3 py-4 space-y-1 overflow-y-auto h-[calc(100vh-180px)]">
         <!-- Dashboard -->
-        <a href="dashboard-pegawai.html" class="menu-item flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors">
+        <a href="{{ route('pegawai.dashboard') }}" class="menu-item flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors">
             <i class="fas fa-chart-pie w-5 text-center"></i>
             <span class="sidebar-text">Dashboard</span>
         </a>
@@ -32,11 +32,11 @@
                 <i class="fas fa-chevron-down text-xs sidebar-text transition-transform duration-300"></i>
             </button>
             <div class="submenu pl-8 space-y-1 mt-1">
-                <a href="new.blade.php" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
+                <a href="{{ route('aset.baru') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
                     <i class="fas fa-box w-4 text-center text-xs"></i>
                     <span>Aset Terbaru</span>
                 </a>
-                <a href="used.blade.php" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
+                <a href="{{ route('aset.terpakai') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 text-sm text-white/80 hover:text-white transition-colors">
                     <i class="fas fa-box-open w-4 text-center text-xs"></i>
                     <span>Aset Terpakai</span>
                 </a>
