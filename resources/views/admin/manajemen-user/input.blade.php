@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
         select {
             appearance: none;
@@ -175,18 +175,15 @@
                             <span class="text-red-500">*</span>
                         </label>
                         <input
-    type="text"
-    name="name"
-    value="{{ old('name') }}"
-    class="w-full px-4 py-2.5 border rounded-lg
-           @error('name') border-red-500 @else border-gray-300 @enderror">
-
-@error('name')
-    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-@enderror
-
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            class="w-full px-4 py-2.5 border rounded-lg
+                            @error('name') border-red-500 @else border-gray-300 @enderror">
+                            @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                     </div>
-
                     <!-- Username -->
                     <div class="md:col-span-2">
                         <label for="namaLengkap" class="block text-sm font-medium text-gray-700 mb-2">
@@ -194,18 +191,15 @@
                             <span class="text-red-500">*</span>
                         </label>
                         <input
-    type="text"
-    name="username"
-    value="{{ old('username') }}"
-    class="w-full px-4 py-2.5 border rounded-lg
-           @error('username') border-red-500 @enderror">
-
-@error('username')
-    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-@enderror
-
+                            type="text"
+                            name="username"
+                            value="{{ old('username') }}"
+                            class="w-full px-4 py-2.5 border rounded-lg
+                                   @error('username') border-red-500 @enderror">
+                            @error('username')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
                     </div>
-
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
@@ -213,18 +207,15 @@
                             <span class="text-red-500">*</span>
                         </label>
                         <input
-    type="email"
-    name="email"
-    value="{{ old('email') }}"
-    class="w-full px-4 py-2.5 border rounded-lg
-           @error('email') border-red-500 @enderror">
-
-@error('email')
-    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-@enderror
-
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            class="w-full px-4 py-2.5 border rounded-lg
+                            @error('email') border-red-500 @enderror">
+                            @error('email')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
                     </div>
-
                     <!-- Role -->
                     <div>
                         <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
@@ -266,9 +257,6 @@
     name="password"
     class="w-full px-4 py-2.5 border rounded-lg
            @error('password') border-red-500 @enderror">
-
-
-
                             <button 
                                 type="button" 
                                 onclick="togglePasswordVisibility('password')"

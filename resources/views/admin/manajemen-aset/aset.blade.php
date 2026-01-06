@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 </head>
 <body class="bg-gray-100 font-inter">
@@ -127,9 +127,23 @@
 </section>
 
             
-            <!-- Actions Bar -->
+            <!-- Filter & Actions Bar -->
 <section class="bg-white rounded-xl shadow-sm p-4 mb-6">
     <div class="flex flex-col sm:flex-row items-end gap-3 justify-between">
+
+        <!-- Filter Kategori -->
+        <div class="w-full sm:w-auto">
+            <select id="mainCategoryFilter"
+                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600
+                       focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                onchange="filterAssets()">
+                <option value="">Semua</option>
+                <option value="infrastruktur-pasif">Infrastruktur Pasif</option>
+                <option value="perangkat-aktif">Perangkat Aktif</option>
+                <option value="power">Power</option>
+                <option value="tools">Tools</option>
+            </select>
+        </div>
 
         <!-- Search & Button -->
         <div class="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
@@ -152,7 +166,9 @@
             </a>
         </div>
     </div>
-</section>    
+</section>
+
+            
             <!-- Table View -->
             <section id="tableView" class="mb-6">
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -169,7 +185,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-    @forelse ($asetBaru as $index => $aset)
+        @forelse ($asetBaru as $index => $aset)
         <tr class="hover:bg-gray-50 transition-colors">
 
             <!-- No -->
@@ -214,18 +230,16 @@
                 <div class="flex items-center justify-center gap-2">
 
                     <!-- Alokasikan -->
-                    <a href="{{ route('manajemen-aset.edit', $aset->id) }}"
+                    <a href="{{ route('manajemen-aset.alokasi', $aset->id) }}"
                        class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700">
                         <i class="fas fa-share-from-square"></i>
                     </a>
 
                     <!-- Detail -->
-                    <button
-    type="button"
-    onclick="openDetailModal({{ $aset->id }})"
-    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
-    <i class="fas fa-eye"></i>
-</button>
+                    <a href="{{ route('manajemen-aset.show', $aset->id) }}"
+                       class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                        <i class="fas fa-eye"></i>
+                    </a>
 
                     <!-- Edit -->
                     <a href="{{ route('manajemen-aset.edit', $aset->id) }}"
@@ -261,7 +275,7 @@
                     </div>
                 </div>
             </section>
-             
+            
             <!-- Pagination -->
 <section class="bg-white rounded-xl shadow-sm p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -333,290 +347,9 @@
         </div>
     </div>
 </section>
-
-            
         </main>
-        
-    </div>
-    
-    
-    <!-- DETAIL MODAL -->
-<div id="detailModal" class="fixed inset-0 z-50 hidden">
-
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
-
-    <!-- DESKTOP -->
-    <div class="hidden lg:flex items-center justify-center h-full">
-        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto p-6 lg:p-8">
-            <div class="mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">Detail Aset</h3>
-                <p id="modalName" class="text-lg font-semibold text-gray-700 mt-1">-</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-6 mb-6 border-b pb-6">
-                <div>
-                    <p class="label">Kode SN</p>
-                    <p id="modalSN" class="value-mono">-</p>
-                </div>
-                <div>
-                    <p class="label">Lokasi</p>
-                    <p id="modalAlamat" class="value">-</p>
-                </div>
-                <div>
-                    <p class="label">Kategori</p>
-                    <p id="modalCategory" class="value">-</p>
-                </div>
-                <div>
-                    <p class="label">Kondisi</p>
-                    <span id="modalConditionBadge" class="badge">
-                        <span id="modalCondition">-</span>
-                    </span>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <p class="label">Keterangan</p>
-                <p id="modalDescription" class="text-gray-700">-</p>
-            </div>
-
-            <div class="flex gap-3 pt-6 border-t">
-                <button onclick="openAllocationModal()" class="btn-primary">Alokasikan</button>
-                <button onclick="closeDetailModal()" class="btn-secondary">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MOBILE -->
-    <div class="lg:hidden fixed inset-x-0 bottom-0 bg-white rounded-t-2xl p-6">
-        <div class="mb-4">
-            <h3 class="text-lg font-bold">Detail Aset</h3>
-            <p id="modalNameMobile" class="font-semibold">-</p>
-        </div>
-
-        <div class="space-y-3 border-b pb-4 mb-4">
-            <div><span class="label">SN</span><p id="modalSNMobile">-</p></div>
-            <div><span class="label">Lokasi</span><p id="modalAlamatMobile">-</p></div>
-            <div><span class="label">Kategori</span><p id="modalCategoryMobile">-</p></div>
-            <div><span class="label">Kondisi</span><p id="modalConditionMobile">-</p></div>
-        </div>
-
-        <div class="flex flex-col gap-2">
-            <button onclick="openAllocationModal()" class="btn-primary">Alokasikan</button>
-            <button onclick="closeDetailModal()" class="btn-secondary">Tutup</button>
-        </div>
-    </div>
-</div>
-
-    <!-- Allocation Modal -->
-    <div id="allocationModal" class="fixed inset-0 z-50 hidden">
-        <div id="allocationBackdropDesktop" class="modal-backdrop absolute inset-0 bg-black/50 hidden lg:block" onclick="closeAllocationModal()"></div>
-        <div id="allocationSheetDesktop" class="modal-sheet lg:modal-sheet-desktop hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-2xl bg-white rounded-2xl shadow-xl lg:max-h-[90vh] overflow-y-auto">
-            <div class="p-6 lg:p-8">
-                <!-- Header -->
-                <div class="mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Alokasi Aset</h3>
-                </div>
-
-                <!-- Asset Details Section -->
-                <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
-                    <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase">Detail Aset yang Dialokasikan</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Nama Aset</p>
-                            <p id="allocName" class="text-sm font-medium text-gray-800">-</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kode SN</p>
-                            <p id="allocSN" class="text-sm font-medium text-gray-800 font-mono">-</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kategori</p>
-                            <p id="allocCategory" class="text-sm font-medium text-gray-800">-</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kondisi</p>
-                            <p id="allocCondition" class="text-sm font-medium text-gray-800">-</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Allocation Form -->
-                <form id="allocationForm" onsubmit="handleAllocationSubmit(event)">
-                    <!-- Grid: Tanggal Alokasi & Lokasi -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <!-- Tanggal Alokasi -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Alokasi</label>
-                            <input type="date" id="allocDate" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" required>
-                        </div>
-
-                        <!-- Lokasi Penempatan -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Penempatan</label>
-                            <input type="text" id="allocLocation" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Lokasi penempatan aset" required>
-                        </div>
-                    </div>
-
-                    <!-- Catatan/Keterangan -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan/Keterangan</label>
-                        <textarea id="allocNotes" rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Masukkan catatan atau keterangan alokasi (opsional)"></textarea>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
-                        <button type="submit" class="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                            Simpan Alokasi
-                        </button>
-                        <button type="button" onclick="closeAllocationModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Mobile Bottom Sheet Version -->
-        <div id="allocationSheetMobile" class="lg:hidden fixed inset-0 z-50 hidden flex flex-col">
-            <div id="allocationBackdropMobile" class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeAllocationModal()"></div>
-            <div class="modal-sheet relative mt-auto">
-                <div class="modal-sheet-handle"></div>
-                <div class="modal-sheet-content p-6">
-                    <!-- Header -->
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Alokasi Aset</h3>
-                    </div>
-
-                    <!-- Asset Details Section -->
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                        <h4 class="text-xs font-semibold text-gray-700 mb-2 uppercase">Detail Aset</h4>
-                        <div class="space-y-2">
-                            <div>
-                                <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Nama</p>
-                                <p id="allocNameMobile" class="text-sm font-medium text-gray-800">-</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kode SN</p>
-                                <p id="allocSNMobile" class="text-sm font-medium text-gray-800 font-mono">-</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kategori</p>
-                                <p id="allocCategoryMobile" class="text-sm font-medium text-gray-800">-</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kondisi</p>
-                                <p id="allocConditionMobile" class="text-sm font-medium text-gray-800">-</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Allocation Form -->
-                    <form id="allocationFormMobile" onsubmit="handleAllocationSubmit(event)" class="space-y-3">
-                        <!-- Tanggal Alokasi -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Tanggal Alokasi</label>
-                            <input type="date" id="allocDateMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" required>
-                        </div>
-
-                        <!-- Lokasi Penempatan -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Lokasi Penempatan</label>
-                            <input type="text" id="allocLocationMobile" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" placeholder="Lokasi" required>
-                        </div>
-
-                        <!-- Catatan -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1 uppercase">Catatan</label>
-                            <textarea id="allocNotesMobile" rows="2" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none" placeholder="Catatan (opsional)"></textarea>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="flex gap-2 pt-3 border-t border-gray-200">
-                            <button type="submit" class="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                                Simpan
-                            </button>
-                            <button type="button" onclick="closeAllocationModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                                Batal
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- JavaScript -->
     <script>
-        // Check if mobile
-        function isMobile() {
-            return window.innerWidth < 1024;
-        }
-
-        // Toggle Sidebar (Mobile)
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-        
-                // Toggle Sidebar (Mobile)
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-        
-        // Toggle Submenu
-        function toggleSubmenu(button) {
-            const container = button.closest('.submenu-container');
-            const submenu = container.querySelector('.submenu');
-            const chevron = button.querySelector('.fa-chevron-down');
-            
-            submenu.classList.toggle('open');
-            chevron.classList.toggle('rotate-180');
-        }
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
-                if (!sidebar.contains(event.target) && !event.target.closest('[onclick="toggleSidebar()"]')) {
-                    sidebar.classList.add('-translate-x-full');
-                    overlay.classList.add('hidden');
-                }
-            }
-        });
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.add('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-            }
-        });
-        
-        // Active menu highlight
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                if (!this.closest('.submenu-container') || !this.querySelector('.fa-chevron-down')) {
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                }
-            });
-        });
-        
         // View Toggle (Grid/Table)
         function setView(view) {
             const gridView = document.getElementById('gridView');
@@ -640,493 +373,14 @@
                 gridBtn.classList.add('text-gray-500');
             }
         }
-        
-        // Detail Modal - Mobile Responsive
-        function openDetailModal(id) {
-            const detailModal = document.getElementById('detailModal');
-            const data = assetData[id] || assetData[1];
-            
-            // Update Desktop Modal
-            document.getElementById('modalName').textContent = data.name;
-            document.getElementById('modalSN').textContent = data.sn;
-            document.getElementById('modalAlamat').textContent = data.alamat;
-            document.getElementById('modalCategory').textContent = data.category;
-            document.getElementById('modalCondition').textContent = data.condition;
-            
-            // Update condition badge color based on condition
-            const conditionBadge = document.getElementById('modalConditionBadge');
-            if (data.condition === 'Baik') {
-                conditionBadge.className = 'inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-lg';
-            } else if (data.condition === 'Rusak Ringan') {
-                conditionBadge.className = 'inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-lg';
-            } else {
-                conditionBadge.className = 'inline-flex items-center px-3 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-lg';
-            }
-            
-            // Update Mobile Modal
-            document.getElementById('modalNameMobile').textContent = data.name;
-            document.getElementById('modalSNMobile').textContent = data.sn;
-            document.getElementById('modalAlamatMobile').textContent = data.alamat;
-            document.getElementById('modalCategoryMobile').textContent = data.category;
-            document.getElementById('modalConditionMobile').textContent = data.condition;
-            
-            if (isMobile()) {
-                // Show mobile version
-                const mobileSheet = document.getElementById('detailSheetMobile');
-                mobileSheet.classList.remove('hidden');
-                mobileSheet.classList.add('modal-mobile-visible');
-                document.body.style.overflow = 'hidden';
-            } else {
-                // Show desktop version
-                const desktopSheet = document.getElementById('detailSheetDesktop');
-                desktopSheet.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-            
-            detailModal.classList.remove('hidden');
-        }
-        
-        function closeDetailModal() {
-            const detailModal = document.getElementById('detailModal');
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('detailSheetMobile');
-                mobileSheet.classList.remove('modal-mobile-visible');
-                mobileSheet.classList.add('modal-mobile-hiding');
-                
-                setTimeout(() => {
-                    detailModal.classList.add('hidden');
-                    mobileSheet.classList.remove('modal-mobile-hiding');
-                    mobileSheet.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 400);
-            } else {
-                const desktopSheet = document.getElementById('detailSheetDesktop');
-                desktopSheet.classList.add('hidden');
-                detailModal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        }
-        
-        // Edit Modal - Mobile Responsive
-        function openEditModal() {
-            const detailModal = document.getElementById('detailModal');
-            const editModal = document.getElementById('editModal');
-            
-            // Close detail modal first
-            if (isMobile()) {
-                const mobileDetail = document.getElementById('detailSheetMobile');
-                mobileDetail.classList.remove('modal-mobile-visible');
-                mobileDetail.classList.add('hidden');
-            } else {
-                const desktopDetail = document.getElementById('detailSheetDesktop');
-                desktopDetail.classList.add('hidden');
-            }
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('editSheetMobile');
-                mobileSheet.classList.remove('hidden');
-                mobileSheet.classList.add('modal-mobile-visible');
-            } else {
-                const desktopSheet = document.getElementById('editSheetDesktop');
-                desktopSheet.classList.remove('hidden');
-            }
-            
-            editModal.classList.remove('hidden');
-        }
-        
-        // Open Edit Modal Directly (tanpa detail modal)
-        function openEditModalDirect(id) {
-            const editModal = document.getElementById('editModal');
-            
-            const data = assetData[id] || assetData[1];
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('editSheetMobile');
-                mobileSheet.classList.remove('hidden');
-                mobileSheet.classList.add('modal-mobile-visible');
-            } else {
-                const desktopSheet = document.getElementById('editSheetDesktop');
-                desktopSheet.classList.remove('hidden');
-            }
-            
-            editModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            
-            // Desktop form
-            document.getElementById('editName').value = data.name;
-            document.getElementById('editCategory').value = data.category;
-            document.getElementById('editCondition').value = data.condition;
-            document.getElementById('editQuantity').value = data.quantity;
-            document.getElementById('editAllocationDate').value = data.allocationDate;
-            document.getElementById('editNotes').value = data.notes;
-            
-            // Mobile form
-            document.getElementById('editNameMobile').value = data.name;
-            document.getElementById('editCategoryMobile').value = data.category;
-            document.getElementById('editConditionMobile').value = data.condition;
-            document.getElementById('editNotesMobile').value = data.notes;
-            
-            window.currentAssetId = id;
-        }
-        
-        function closeEditModal() {
-            const editModal = document.getElementById('editModal');
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('editSheetMobile');
-                mobileSheet.classList.remove('modal-mobile-visible');
-                mobileSheet.classList.add('modal-mobile-hiding');
-                
-                setTimeout(() => {
-                    editModal.classList.add('hidden');
-                    mobileSheet.classList.remove('modal-mobile-hiding');
-                    mobileSheet.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 400);
-            } else {
-                const desktopSheet = document.getElementById('editSheetDesktop');
-                desktopSheet.classList.add('hidden');
-                editModal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        }
-        
-        function handleEditSubmit(event) {
-            event.preventDefault();
-            alert('Aset berhasil diperbarui!');
-            closeEditModal();
-        }
-
-        // Allocation Modal Functions
-        function openAllocationModal() {
-            closeDetailModal();
-            
-            const allocationModal = document.getElementById('allocationModal');
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('allocationSheetMobile');
-                mobileSheet.classList.remove('hidden');
-                mobileSheet.classList.add('modal-mobile-visible');
-            } else {
-                const desktopSheet = document.getElementById('allocationSheetDesktop');
-                desktopSheet.classList.remove('hidden');
-            }
-            
-            allocationModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            
-            // Populate asset details from detail modal
-            const name = document.getElementById('modalName').textContent;
-            const sn = document.getElementById('modalSN').textContent;
-            const category = document.getElementById('modalCategory').textContent;
-            const condition = document.getElementById('modalCondition').textContent;
-            
-            // Desktop form
-            document.getElementById('allocName').textContent = name;
-            document.getElementById('allocSN').textContent = sn;
-            document.getElementById('allocCategory').textContent = category;
-            document.getElementById('allocCondition').textContent = condition;
-            
-            // Mobile form
-            document.getElementById('allocNameMobile').textContent = name;
-            document.getElementById('allocSNMobile').textContent = sn;
-            document.getElementById('allocCategoryMobile').textContent = category;
-            document.getElementById('allocConditionMobile').textContent = condition;
-            
-            // Set today's date as default
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('allocDate').value = today;
-            document.getElementById('allocDateMobile').value = today;
-        }
-        
-        // Open Allocation Modal Directly from Card (tanpa detail modal)
-        function openAllocationModalDirect(id) {
-            const allocationModal = document.getElementById('allocationModal');
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('allocationSheetMobile');
-                mobileSheet.classList.remove('hidden');
-                mobileSheet.classList.add('modal-mobile-visible');
-            } else {
-                const desktopSheet = document.getElementById('allocationSheetDesktop');
-                desktopSheet.classList.remove('hidden');
-            }
-            
-            allocationModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            
-            // Populate asset details from assetData directly
-            const data = assetData[id] || assetData[1];
-            
-            // Desktop form
-            document.getElementById('allocName').textContent = data.name;
-            document.getElementById('allocSN').textContent = data.sn;
-            document.getElementById('allocCategory').textContent = data.category;
-            document.getElementById('allocCondition').textContent = data.condition;
-            
-            // Mobile form
-            document.getElementById('allocNameMobile').textContent = data.name;
-            document.getElementById('allocSNMobile').textContent = data.sn;
-            document.getElementById('allocCategoryMobile').textContent = data.category;
-            document.getElementById('allocConditionMobile').textContent = data.condition;
-            
-            // Set today's date as default
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('allocDate').value = today;
-            document.getElementById('allocDateMobile').value = today;
-            
-            window.currentAssetId = id;
-        }
-        
-        function closeAllocationModal() {
-            const allocationModal = document.getElementById('allocationModal');
-            
-            if (isMobile()) {
-                const mobileSheet = document.getElementById('allocationSheetMobile');
-                mobileSheet.classList.remove('modal-mobile-visible');
-                mobileSheet.classList.add('modal-mobile-hiding');
-                
-                setTimeout(() => {
-                    allocationModal.classList.add('hidden');
-                    mobileSheet.classList.remove('modal-mobile-hiding');
-                    mobileSheet.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 400);
-            } else {
-                const desktopSheet = document.getElementById('allocationSheetDesktop');
-                desktopSheet.classList.add('hidden');
-                allocationModal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        }
-        
-        function handleAllocationSubmit(event) {
-            event.preventDefault();
-            
-            // Get form data
-            const allocationDate = document.getElementById('allocDate')?.value || document.getElementById('allocDateMobile')?.value;
-            const location = document.getElementById('allocLocation')?.value || document.getElementById('allocLocationMobile')?.value;
-            const notes = document.getElementById('allocNotes')?.value || document.getElementById('allocNotesMobile')?.value;
-            
-            // Validasi form
-            let errors = [];
-            
-            if (!allocationDate || allocationDate.trim() === '') {
-                errors.push('Tanggal Alokasi harus diisi');
-            }
-            
-            if (!location || location.trim() === '') {
-                errors.push('Lokasi Penempatan harus diisi');
-            }
-            
-            // Jika ada error, tampilkan error modal
-            if (errors.length > 0) {
-                showErrorModal(errors);
-                return;
-            }
-            
-            // Jika validasi berhasil, tampilkan confirmation modal
-            showAllocationConfirmModal(allocationDate, location, notes);
-        }
-        
-        function showErrorModal(errors) {
-            const errorModal = document.createElement('div');
-            errorModal.className = 'fixed inset-0 z-[9999] flex items-center justify-center';
-            errorModal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
-                <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 animate-in">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Validasi Form Gagal</h3>
-                    <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                        <ul class="space-y-2">
-                            ${errors.map(error => `<li class="text-sm text-red-700 flex items-start gap-2"><i class="fas fa-times-circle mt-0.5 flex-shrink-0"></i><span>${error}</span></li>`).join('')}
-                        </ul>
-                    </div>
-                    <button onclick="this.closest('.fixed').remove()" class="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                        Kembali Ke Form
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(errorModal);
-        }
-        
-        function showAllocationConfirmModal(allocationDate, location, notes) {
-            // Get asset details from the modal
-            const assetName = document.getElementById('allocName')?.textContent || document.getElementById('allocNameMobile')?.textContent || '-';
-            const assetSN = document.getElementById('allocSN')?.textContent || document.getElementById('allocSNMobile')?.textContent || '-';
-            
-            const confirmModal = document.createElement('div');
-            confirmModal.className = 'fixed inset-0 z-[9999] flex items-center justify-center';
-            confirmModal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
-                <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 animate-in">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-clipboard-check text-blue-600 text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">Konfirmasi Alokasi Aset</h3>
-                    
-                    <!-- Ringkasan Data -->
-                    <div class="mb-6 space-y-3 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Nama Aset</p>
-                            <p class="text-sm font-medium text-gray-800">${assetName}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Kode SN</p>
-                            <p class="text-sm font-medium text-gray-800 font-mono">${assetSN}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Tanggal Alokasi</p>
-                            <p class="text-sm font-medium text-gray-800">${new Date(allocationDate).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Lokasi Penempatan</p>
-                            <p class="text-sm font-medium text-gray-800">${location}</p>
-                        </div>
-                        ${notes ? `<div>
-                            <p class="text-xs text-gray-500 font-semibold uppercase mb-1">Catatan</p>
-                            <p class="text-sm font-medium text-gray-800">${notes}</p>
-                        </div>` : ''}
-                    </div>
-                    
-                    <p class="text-sm text-gray-600 text-center mb-6">Apakah Anda yakin ingin melanjutkan alokasi aset ini?</p>
-                    
-                    <div class="flex gap-3">
-                        <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
-                        <button onclick="processAllocation('${assetName}', '${allocationDate}', '${location}', '${notes}'); this.closest('.fixed').remove()" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                            Yakin, Alokasikan
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(confirmModal);
-        }
-        
-        function processAllocation(assetName, allocationDate, location, notes) {
-            // Log data
-            console.log({
-                assetName,
-                allocationDate,
-                location,
-                notes: notes || '-'
-            });
-            
-            // Tampilkan success modal
-            const successModal = document.createElement('div');
-            successModal.className = 'fixed inset-0 z-[9999] flex items-center justify-center';
-            successModal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
-                <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 animate-in">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">Alokasi Berhasil</h3>
-                    <p class="text-gray-600 text-center text-sm mb-6">Aset <strong>"${assetName}"</strong> telah berhasil dialokasikan.</p>
-                    <button onclick="document.getElementById('allocationModal').classList.add('hidden'); this.closest('.fixed').remove(); location.reload();" class="w-full px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                        OK
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(successModal);
-            
-            // Reset form
-            document.getElementById('allocationForm')?.reset();
-            document.getElementById('allocationFormMobile')?.reset();
-        }
-        
-        // Confirm Delete Modal
-        function confirmDelete(assetName) {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 z-50 flex items-center justify-center';
-            modal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
-                <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 animate-in">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-trash-can text-red-600 text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">Hapus Aset</h3>
-                    <p class="text-gray-600 text-center text-sm mb-6">Apakah Anda yakin ingin menghapus aset <strong>"${assetName}"</strong>? Tindakan ini tidak dapat dibatalkan.</p>
-                    <div class="flex gap-3">
-                        <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                            Batal
-                        </button>
-                        <button onclick="executeDelete('${assetName}'); this.closest('.fixed').remove()" class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                            Hapus
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        
-        // Execute Delete
-        function executeDelete(assetName) {
-            const successModal = document.createElement('div');
-            successModal.className = 'fixed inset-0 z-50 flex items-center justify-center';
-            successModal.innerHTML = `
-                <div class="absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
-                <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 animate-in">
-                    <div class="flex justify-center mb-4">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-check text-green-600 text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">Berhasil</h3>
-                    <p class="text-gray-600 text-center text-sm mb-6">Aset <strong>"${assetName}"</strong> telah berhasil dihapus.</p>
-                    <button onclick="this.closest('.fixed').remove()" class="w-full px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                        OK
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(successModal);
-        }
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
-                if (!sidebar.contains(event.target) && !event.target.closest('[onclick="toggleSidebar()"]')) {
-                    sidebar.classList.add('-translate-x-full');
-                    overlay.classList.add('hidden');
-                }
-            }
-        });
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.add('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-            }
-        });
-        
         // Close modal on escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeDetailModal();
                 closeEditModal();
             }
+        });
     </script>
-    
+    <script src="{{ asset('js/sidebar.js') }}"></script>
 </body>
 </html>

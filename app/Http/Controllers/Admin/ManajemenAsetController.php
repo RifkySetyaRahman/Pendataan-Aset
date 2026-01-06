@@ -156,41 +156,67 @@ class ManajemenAsetController extends Controller
             ->with('success', 'Aset berhasil ditambahkan');
     }
 
-    public function show($id)
-{
-    $aset = Aset::with(['kategori', 'kondisi'])->findOrFail($id);
-
-    return response()->json([
-        'id' => $aset->id,
-        'name' => $aset->name,
-        'serialnumber' => $aset->serialnumber,
-        'location' => $aset->location,
-        'kategori' => $aset->kategori->name ?? '-',
-        'kondisi' => $aset->kondisi->name ?? '-',
-        'description' => $aset->description,
-    ]);
-}
 
 /**
  * FORM EDIT ASET
  */
 public function edit($id)
 {
-    // Cari aset berdasarkan ID
+    // Ambil aset berdasarkan ID
     $aset = Aset::findOrFail($id);
 
-    // Ambil data kategori dan kondisi untuk select option
+    // Ambil data kategori & kondisi (untuk select option)
     $categories = KategoriAset::orderBy('name')->get();
     $conditions = KondisiAset::orderBy('name')->get();
-     $asetList = Aset::orderBy('name')->get();
-    // Kirim data ke view
-    return view('admin.manajemen-aset.update', compact(
+
+    return view('admin.manajemen-aset.edit', compact(
         'aset',
-        'asetList',
         'categories',
         'conditions'
     ));
 }
+
+    // FORM ALOKASI
+    public function allocateForm()
+    {
+        // 🔹 hanya aset status BARU
+        $daftarAset = Aset::where('status', 'baru')
+            ->orderBy('name')
+            ->get();
+
+        // default aset pertama (untuk tampilan awal)
+        $aset = $daftarAset->first();
+
+        $categories = KategoriAset::orderBy('name')->get();
+        $conditions = KondisiAset::orderBy('name')->get();
+
+        return view('admin.manajemen-aset.form-alokasi', compact(
+            'daftarAset',
+            'aset',
+            'categories',
+            'conditions'
+        ));
+    }
+
+    // PROSES ALOKASI
+    public function allocate(Request $request)
+    {
+        $request->validate([
+            'aset_id' => 'required|exists:asets,id',
+        ]);
+
+        $aset = Aset::findOrFail($request->aset_id);
+
+        // ubah status setelah dialokasikan
+        $aset->update([
+            'status' => 'terpakai',
+        ]);
+
+        return redirect()
+            ->route('admin.manajemen-aset.index')
+            ->with('success', 'Aset berhasil dialokasikan');
+    }
+
 
     /**
  * UPDATE DATA ASET

@@ -70,10 +70,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
             ->name('manajemen-aset.store');
         Route::get('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'show'])
             ->name('manajemen-aset.show');
+
         Route::get('/manajemen-aset/{aset}/edit', [ManajemenAsetController::class, 'edit'])
             ->name('manajemen-aset.edit');
         Route::put('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'update'])
             ->name('manajemen-aset.update');
+
+        Route::get('/manajemen-aset/form-alokasi', [ManajemenAsetController::class, 'allocateForm'])
+            ->name('manajemen-aset.alokasi');
+        Route::post('/manajemen-aset/allocate', [ManajemenAsetController::class, 'allocate'])
+            ->name('manajemen-aset.allocate');
+
         Route::delete('/manajemen-aset/{aset}', [ManajemenAsetController::class, 'destroy'])
             ->name('manajemen-aset.destroy');
 
@@ -86,4 +93,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
         Route::get('/kondisi-aset', [KondisiAsetController::class, 'index'])->name('kondisi-aset.index');
         Route::post('/kondisi-aset', [KondisiAsetController::class, 'store'])->name('kondisi-aset.store');
         Route::delete('/kondisi-aset/{id}', [KondisiAsetController::class, 'destroy'])->name('kondisi-aset.destroy');
+
+        
     // });
